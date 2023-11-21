@@ -25,16 +25,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink href='/dashboard' active={pathName.includes("/dashboard")} className='text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
+                                <NavLink href='/dashboard' active={pathName ? pathName.includes("/dashboard") : false} className='text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
                                     Dashboard
                                 </NavLink>
-                                <NavLink href='/goals' active={pathName.includes("/goals")} className=' text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
+                                <NavLink href='/goals' active={pathName ? pathName.includes("/goals") : false} className=' text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
                                     Goals
                                 </NavLink>
-                                <NavLink href='/budgets' active={pathName.includes("/budgets")} className=' text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
+                                <NavLink href='/budgets' active={pathName ? pathName.includes("/budgets") : false} className=' text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
                                     Budgets
                                 </NavLink>
-                                <NavLink href='/transactions' active={pathName.includes("/transactions")} className=' text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
+                                <NavLink href='/transactions' active={pathName ? pathName.includes("/transactions") : false} className=' text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
                                     Transactions
                                 </NavLink>
                             </div>
@@ -111,16 +111,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </div>
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden max-w-sm md:max-w-md lg:max-w-7xl'}>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href="/dashboard" active={pathName.includes("/dashboard")} className='dark:text-slate-100'>
+                        <ResponsiveNavLink href="/dashboard" active={pathName ? pathName.includes("/dashboard") : false} className='dark:text-slate-100'>
                             Dashboard
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href='/goals' active={pathName.includes("/goals")} className=' dark:text-slate-100'>
+                        <ResponsiveNavLink href='/goals' active={pathName ? pathName.includes("/goals") : false} className=' dark:text-slate-100'>
                             Goals
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href='/budgets' active={pathName.includes("/budgets")} className=' dark:text-slate-100'>
+                        <ResponsiveNavLink href='/budgets' active={pathName ? pathName.includes("/budgets") : false} className=' dark:text-slate-100'>
                             Budgets
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href='/transactions' active={pathName.includes("/transactions")} className=' dark:text-slate-100'>
+                        <ResponsiveNavLink href='/transactions' active={pathName ? pathName.includes("/transactions") : false} className=' dark:text-slate-100'>
                             Transactions
                         </ResponsiveNavLink>
                     </div>
