@@ -21,7 +21,7 @@ export default function Login() {
                 <TextInput
                     type="email"
                     className="mt-1 block w-full"
-                    autoComplete="username"
+                    autoComplete="email"
                     isFocused={true}
                     placeholder='Enter your email address'
                     required

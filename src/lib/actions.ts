@@ -1,6 +1,6 @@
 'use server';
 
-import { signIn } from '@/../auth';
+import { signIn } from '@/lib/auth';
 
 export async function authenticate( prevState: string | undefined, formData: FormData ) {
     try {
