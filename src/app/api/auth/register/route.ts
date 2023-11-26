@@ -17,7 +17,7 @@ async function regUser(userName: string, email: string, password: string): Promi
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await sql<User>`
             INSERT INTO users 
-                (userName, email, password)
+                (name, email, password)
             VALUES
                 (${userName}, ${email}, ${hashedPassword})`;
         return user.rows[0];
