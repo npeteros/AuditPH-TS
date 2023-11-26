@@ -15,9 +15,9 @@ async function seedUsers(client) {
                 expenses DOUBLE PRECISION NOT NULL DEFAULT 0.00,
                 goals INT NOT NULL DEFAULT 0,
                 budgets INT NOT NULL DEFAULT 0,
-                money_saved INT NOT NULL DEFAULT 0,
+                moneySaved INT NOT NULL DEFAULT 0,
                 transactions INT NOT NULL DEFAULT 0,
-                total_balance DOUBLE PRECISION NOT NULL DEFAULT 0.00
+                totalBalance DOUBLE PRECISION NOT NULL DEFAULT 0.00
             );
         `;
 
@@ -34,19 +34,19 @@ async function seedBudgetTypes(client) {
     try {
         await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
         const createTable = await client.sql`
-            CREATE TABLE IF NOT EXISTS budget_types (
+            CREATE TABLE IF NOT EXISTS budgetTypes (
                 id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
+                typeName TEXT NOT NULL,
                 color TEXT NOT NULL
             );
         `;
 
-        console.log(`Created "budget_types" table`);
+        console.log(`Created "budgetTypes" table`);
 
         const insertedTypes = await Promise.all(
             budget_types.map(
                 (type) => client.sql`
-                    INSERT INTO budget_types (id, name, color)
+                    INSERT INTO budgetTypes (id, typeName, color)
                     VALUES (${type.id}, ${type.name}, ${type.color})
                     ON CONFLICT (id) DO NOTHING;
                 `,
@@ -71,12 +71,12 @@ async function seedBudgets(client) {
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS budgets (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-                user_id UUID NOT NULL,
-                budget_type_id INT NOT NULL,
-                budget_total DOUBLE PRECISION NOT NULL DEFAULT 0.00,
-                budget_current DOUBLE PRECISION NOT NULL DEFAULT 0.00,
-                CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL,
-                CONSTRAINT fk_budget FOREIGN KEY(budget_type_id) REFERENCES budget_types(id) ON DELETE SET NULL
+                userId UUID,
+                budgetTypeId INT,
+                budgetTotal DOUBLE PRECISION NOT NULL DEFAULT 0.00,
+                budgetCurrent DOUBLE PRECISION NOT NULL DEFAULT 0.00,
+                CONSTRAINT fk_user FOREIGN KEY(userId) REFERENCES users(id) ON DELETE SET NULL,
+                CONSTRAINT fk_budget FOREIGN KEY(budgetTypeId) REFERENCES budgetTypes(id) ON DELETE SET NULL
             );
         `;
 
@@ -95,11 +95,11 @@ async function seedGoals(client) {
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS goals (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-                user_id UUID NOT NULL,
-                name TEXT NOT NULL,
-                current INT NOT NULL DEFAULT 0,
-                target INT NOT NULL,
-                CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
+                userId UUID,
+                goalName TEXT NOT NULL,
+                goalCurrent INT NOT NULL DEFAULT 0,
+                goalTarget INT NOT NULL,
+                CONSTRAINT fk_user FOREIGN KEY(userId) REFERENCES users(id) ON DELETE SET NULL
             );
         `;
 
@@ -118,14 +118,14 @@ async function seedTransactions(client) {
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS transactions (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-                user_id UUID NOT NULL,
-                budget_type_id INT NOT NULL,
-                goal_id UUID DEFAULT NULL,
-                name TEXT NOT NULL,
-                amount INT NOT NULL,
-                CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL,
-                CONSTRAINT fk_budget FOREIGN KEY(budget_type_id) REFERENCES budget_types(id) ON DELETE SET NULL,
-                CONSTRAINT fk_goal FOREIGN KEY(goal_id) REFERENCES goals(id) ON DELETE SET NULL
+                userId UUID NOT NULL,
+                budgetTypeId INT NOT NULL,
+                goalId UUID DEFAULT NULL,
+                transactioName TEXT NOT NULL,
+                transactionAmount INT NOT NULL,
+                CONSTRAINT fk_user FOREIGN KEY(userId) REFERENCES users(id) ON DELETE SET NULL,
+                CONSTRAINT fk_budget FOREIGN KEY(budgetTypeId) REFERENCES budgetTypes(id) ON DELETE SET NULL,
+                CONSTRAINT fk_goal FOREIGN KEY(goalId) REFERENCES goals(id) ON DELETE SET NULL
             );
         `;
 
@@ -138,6 +138,25 @@ async function seedTransactions(client) {
     }
 }
 
+async function dropAllTables(client) {
+    try {
+        const dropTables = await client.sql`
+            DROP TABLE transactions;
+            DROP TABLE goals;
+            DROP TABLE budgets;
+            DROP TABLE budgetTypes;
+            DROP TABLE budget_types;
+            DROP TABLE users;
+        `;
+
+        console.log(`Dropped all tables`);
+        return dropTables;
+    } catch (error) {
+        console.error('Error dropping tables: ', error);
+        throw error;
+    }
+}
+
 async function main() {
     const client = await db.connect();
 
@@ -146,6 +165,8 @@ async function main() {
     await seedBudgets(client);
     await seedGoals(client);
     await seedTransactions(client);
+
+    // await dropAllTables(client);
 
     await client.end();
 }

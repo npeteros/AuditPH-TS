@@ -1,12 +1,70 @@
+'use client';
+
+import InputError from '@/components/InputError';
 import InputLabel from '@/components/InputLabel';
 import PrimaryButton from '@/components/PrimaryButton';
 import TextInput from '@/components/TextInput';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
 
+    const [user, setUser] = useState({
+        userName: '',
+        email: '',
+        password: '',
+        confirmPass: ''
+    });
+
+    const [message, setMessage] = useState('')
+    const [status, setStatus] = useState(0)
+    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (user) {
+            if (user.password !== user.confirmPass) {
+                setMessage("Error: Passwords do not match!");
+            } else {
+                try {
+                    fetch('/api/auth/register', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            userName: user.userName,
+                            email: user.email,
+                            password: user.password
+                        }),
+                    }).then(async (res) => {
+                        const msg = await res.json();
+
+
+                        if (res.status === 201) {
+                            setStatus(res.status);
+                            setMessage(msg.message);
+                            setTimeout(() => {
+                                router.push("/login");
+                            }, 2000);
+                        } else {
+                            setMessage(msg.message);
+                        }
+                    });
+                } catch (error) {  
+                    console.log("Error during registration: ", error);
+                    
+                }
+            }
+        } else {
+            setMessage("Error: All fields are necessary!");
+        }
+    }
+
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <div>
                 <InputLabel htmlFor="name" className='block font-medium text-sm text-neutral-600 dark:text-neutral-200' value="Name" />
 
@@ -14,9 +72,9 @@ export default function Register() {
                     id="name"
                     name="name"
                     className="mt-1 block w-full text-sm"
-                    autoComplete="username"
                     isFocused={true}
                     placeholder='Enter your username'
+                    onChange={e => setUser({ ...user, userName: e.target.value })}
                     required
                 />
 
@@ -30,8 +88,8 @@ export default function Register() {
                     type="email"
                     name="email"
                     className="mt-1 block w-full text-sm"
-                    autoComplete="email"
                     placeholder='Enter your email address'
+                    onChange={e => setUser({ ...user, email: e.target.value })}
                     required
                 />
 
@@ -45,8 +103,8 @@ export default function Register() {
                     type="password"
                     name="password"
                     className="mt-1 block w-full text-sm"
-                    autoComplete="new-password"
                     placeholder='Enter your password'
+                    onChange={e => setUser({ ...user, password: e.target.value })}
                     required
                 />
 
@@ -60,11 +118,21 @@ export default function Register() {
                     type="password"
                     name="password_confirmation"
                     className="mt-1 block w-full text-sm"
-                    autoComplete="new-password"
                     placeholder='Re-enter your password'
+                    onChange={e => setUser({ ...user, confirmPass: e.target.value })}
                     required
                 />
 
+            </div>
+
+            <div className="mt-4">
+                {
+                    status === 201 ? 
+                        <InputError message={message} className='text-emerald-500' />
+                    :
+                        <InputError message={message} className='text-red-500' />
+                }
+                
             </div>
 
             <div className="flex items-center justify-end mt-4">

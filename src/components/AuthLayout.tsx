@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -7,10 +7,14 @@ import AuditLogo from '@/components/AuditLogo';
 import Dropdown from '@/components/Dropdown';
 import NavLink from '@/components/NavLink';
 import ResponsiveNavLink from '@/components/ResponsiveNavLink';
+import { useSession } from 'next-auth/react';
+import { SignOut } from './Auth/SignOut';
+import ResponsiveNavText from './ResponsiveNavText';
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const pathName = usePathname();
+    const { data: session } = useSession();
 
     return (
         <div className="min-h-screen bg-white dark:bg-neutral-800 bg-[url('/cover.svg')]">
@@ -49,7 +53,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                                 type="button"
                                                 className="inline-flex items-center px-4 py-3 border border-transparent text-sm leading-4 font-medium rounded-md text-neutral-800 dark:text-white hover:dark:text-neutral-400 hover:text-neutral-900 hover:bold focus:outline-none transition ease-in-out duration-150 bg-neutral-50 shadow-lg dark:bg-neutral-600"
                                             >
-                                                User
+                                                {session?.user?.name}
 
 
                                                 <svg
@@ -73,12 +77,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                             className=''
                                             href="/profile.edit"
                                         >Profile</Dropdown.Link>
-                                        <Dropdown.Link
-                                            className=''
-                                            href="/logout"
+                                        <form
+                                            action={SignOut}
+                                            className="w-full"
                                         >
-                                            <button>Log Out</button>
-                                        </Dropdown.Link>
+                                            <button className='w-full'>
+                                                <Dropdown.Text
+                                                    className=''
+                                                >
+                                                    Log Out
+                                                </Dropdown.Text>
+                                            </button>
+                                        </form>
                                     </Dropdown.Content>
                                 </Dropdown>
                             </div>
@@ -127,8 +137,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
                     <div className="pt-4 pb-1 border-t border-gray-200">
                         <div className="px-4">
-                            <div className="font-medium text-base dark:text-white dark:hover:text-white-600 text-neutral-600">User</div>
-                            <div className="font-medium text-sm text-gray-400">user@mail.com</div>
+                            <div className="font-medium text-base dark:text-white dark:hover:text-white-600 text-neutral-600">{session?.user?.name}</div>
+                            <div className="font-medium text-sm text-gray-400">{session?.user?.email}</div>
                         </div>
 
                         <div className="mt-3 space-y-1">
@@ -137,13 +147,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 href="/profile.edit"
                                 className='text-neutral-600'
                             >Profile</ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                active={false}
-                                href="/logout"
-                                className='text-neutral-600'
+                            <form
+                                action={SignOut}
+                                className="w-full"
                             >
-                                <button>Log Out</button>
-                            </ResponsiveNavLink>
+                                <button className='w-full'>
+                                    <ResponsiveNavText
+                                        active={false}
+                                        className='text-neutral-600'
+                                    >
+                                        Log Out
+                                    </ResponsiveNavText>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

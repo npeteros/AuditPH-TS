@@ -83,6 +83,20 @@ const Content = ({ align = 'right', width = '48', contentClasses = 'py-1 bg-whit
     );
 };
 
+const DropdownText = ({ className = '', children, ...props }: { className: string, children: React.ReactNode }) => {
+    return (
+        <span 
+            {...props}
+            className={
+                'block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out ' +
+                className
+            }
+        >
+            {children}
+        </span>
+    )
+}
+
 const DropdownLink = ({ className = '', children, href, ...props }: { className: string, children: React.ReactNode, href: string }) => {
     return (
         <Link
@@ -100,6 +114,7 @@ const DropdownLink = ({ className = '', children, href, ...props }: { className:
 
 Dropdown.Trigger = Trigger;
 Dropdown.Content = Content;
+Dropdown.Text = DropdownText;
 Dropdown.Link = DropdownLink;
 
 export default Dropdown;
