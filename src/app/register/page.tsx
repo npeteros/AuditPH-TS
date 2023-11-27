@@ -4,9 +4,12 @@ import InputError from '@/components/InputError';
 import InputLabel from '@/components/InputLabel';
 import PrimaryButton from '@/components/PrimaryButton';
 import TextInput from '@/components/TextInput';
+import LoadingDots from '@/components/LoadingDots';
+
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useFormStatus } from 'react-dom';
 
 export default function Register() {
 
@@ -19,6 +22,7 @@ export default function Register() {
 
     const [message, setMessage] = useState('')
     const [status, setStatus] = useState(0)
+    const [loading, setLoading] = useState(false)
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,6 +33,7 @@ export default function Register() {
                 setMessage("Error: Passwords do not match!");
             } else {
                 try {
+                    setLoading(true)
                     fetch('/api/auth/register', {
                         method: "POST",
                         headers: {
@@ -46,14 +51,16 @@ export default function Register() {
                         if (res.status === 201) {
                             setStatus(res.status);
                             setMessage(msg.message);
+                            setLoading(false)
                             setTimeout(() => {
                                 router.push("/login");
                             }, 2000);
                         } else {
                             setMessage(msg.message);
+                            setLoading(false)
                         }
                     });
-                } catch (error) {  
+                } catch (error) {
                     console.log("Error during registration: ", error);
                 }
             }
@@ -126,12 +133,12 @@ export default function Register() {
 
             <div className="mt-4">
                 {
-                    status === 201 ? 
+                    status === 201 ?
                         <InputError message={message} className='text-emerald-500' />
-                    :
+                        :
                         <InputError message={message} className='text-red-500' />
                 }
-                
+
             </div>
 
             <div className="flex items-center justify-end mt-4">
@@ -142,8 +149,16 @@ export default function Register() {
                     Already registered?
                 </Link>
 
-                <PrimaryButton className="ml-4">
-                    Register
+                <PrimaryButton className='ml-4' disabled={loading}>
+                    {
+                        loading ? (
+                            <div>
+                                <LoadingDots color="#808080" />
+                            </div>
+                        ) : (
+                            <span>Register</span>
+                        )
+                    }
                 </PrimaryButton>
             </div>
         </form>
