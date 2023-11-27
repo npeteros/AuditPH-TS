@@ -7,10 +7,9 @@ import { redirect } from "next/navigation";
 
 export default async function Page() {
     const session = await auth();
-    const email = session?.user?.email;
     const user = await prisma.user.findUnique({
         where: {
-            email,
+            email: session?.user?.email ?? undefined
         },
     });
 
