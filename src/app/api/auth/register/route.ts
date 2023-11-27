@@ -37,7 +37,6 @@ export async function POST(req: Request) {
     const { userName, email, password } = await req.json();
     const exists = await checkUser(email);
     if (exists) {
-        console.log(1)
         return NextResponse.json({ message: "User already exists" }, { status: 400 });
     } else {
         await regUser(userName, email, password);

@@ -1,52 +1,52 @@
 const budget_types = [
     { 
         id: 1, 
-        name: "Bills", 
+        typeName: "Bills", 
         color: "#0052CC" 
     },
     { 
-        id: 1, 
-        name: "Clothing", 
+        id: 2, 
+        typeName: "Clothing", 
         color: "#002855" 
     },
     { 
         id: 3, 
-        name: "Education", 
+        typeName: "Education", 
         color: "#00AADD" 
     },
     { 
         id: 4, 
-        name: "Entertainment", 
+        typeName: "Entertainment", 
         color: "#91C9F6" 
     },
     { 
         id: 5, 
-        name: "Food/Drinks", 
+        typeName: "Food/Drinks", 
         color: "#006B37" 
     },
     { 
         id: 6, 
-        name: "Groceries", 
+        typeName: "Groceries", 
         color: "#00974C" 
     },
     { 
         id: 7, 
-        name: "Housing", 
+        typeName: "Housing", 
         color: "#FF5733" 
     },
     { 
         id: 8, 
-        name: "Pets", 
+        typeName: "Pets", 
         color: "#333333" 
     },
     { 
         id: 9, 
-        name: "Transportation", 
+        typeName: "Transportation", 
         color: "#666666" 
     },
     { 
         id: 10, 
-        name: "Travel", 
+        typeName: "Travel", 
         color: "#CCCCCC"
     }
 ];

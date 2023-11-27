@@ -1,12 +1,30 @@
 'use client';
 
 import PrimaryButton from "@/components/PrimaryButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { BudgetType } from "@prisma/client";
 
 export default function Page() {
 
     const [budgetTypeId, setBudgetTypeId] = useState(0);
     const [budgetTotal, setBudgetTotal] = useState(0);
+    const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
+
+    useEffect(() => {
+        async function fetchBudgetTypes() {
+            try {
+                fetch('/api/budgetTypes')
+                    .then(res => res.json())
+                    .then(data => setBudgetTypes(data))
+            } catch (error) {
+                console.error('Error fetching BudgetTypes:', error);
+            }
+        }
+
+        fetchBudgetTypes()
+    }, [])
+
+
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -26,17 +44,13 @@ export default function Page() {
                             value={budgetTypeId}
                             onChange={e => setBudgetTypeId(Number(e.target.value))}
                         >
-                            <option selected>Choose an expense</option>
-                            <option value="1">Bills</option>
-                            <option value="2">Clothing</option>
-                            <option value="3">Education</option>
-                            <option value="4">Entertainment</option>
-                            <option value="5">Food/Drinks</option>
-                            <option value="6">Groceries</option>
-                            <option value="7">Housing</option>
-                            <option value="8">Pets</option>
-                            <option value="9">Transportation</option>
-                            <option value="10">Travel</option>
+                            <option value={0}>Choose an expense</option>
+                            {
+                                budgetTypes.map((budgetType) =>
+                                (
+                                    <option key={budgetType.id} value={budgetType.id}>{budgetType?.typeName}</option>
+                                ))
+                            }
                         </select>
 
                         <label htmlFor="budget_total" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set a budget</label>
