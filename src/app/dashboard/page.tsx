@@ -9,7 +9,7 @@ export default async function Page() {
         session.user = {
             id: session.user.id,
             name: session.user.name,
-            email: session.user.email,
+            email: session.user.email,  
         };
 
     return (
@@ -133,4 +133,5 @@ export default async function Page() {
             </AuthLayout>
         </Provider >
     );
+    
 }

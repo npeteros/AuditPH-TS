@@ -8,6 +8,7 @@ import { sql } from '@vercel/postgres';
 import type { User } from '@/lib/definitions';
 import type { NextAuthConfig } from 'next-auth';
 
+
 async function getUser(email: string): Promise<User | undefined> {
     try {
         const user = await sql<User>`SELECT * FROM users WHERE email = ${email}`;
@@ -36,29 +37,29 @@ export const authConfig = {
                     const passwordsMatch = await bcrypt.compare(password, user.password);
 
                     if (passwordsMatch) {
-                        console.log(user)
+                        console.log("Successfully logged in: ", user)
                         return user;
                     }
                 }
                 console.log('Invalid credentials');
-                console.log(credentials);
+                console.log("Invalid log in: ", credentials);
                 return null;
             },
         }),
     ],
     callbacks: {
-        authorized(params) {
-            console.log(params)
-            // const isLoggedIn = !!auth?.user;
-            // const isOnDashboard = nextUrl.pathname.includes('/dashboard');
-            // if (isOnDashboard) {
-            //     if (isLoggedIn) return true;
-            //     return false; // Redirect unauthenticated users to login page
-            // } else if (isLoggedIn) {
-            //     return Response.redirect(new URL('/dashboard', nextUrl));
-            // }
-            return true;
-        },
+        // authorized(params) {
+        //     console.log("Authorized: ", params)
+        //     const isLoggedIn = !!auth?.user;
+        //     const isOnDashboard = nextUrl.pathname.includes('/dashboard');
+        //     if (isOnDashboard) {
+        //         if (isLoggedIn) return true;
+        //         return false; // Redirect unauthenticated users to login page
+        //     } else if (isLoggedIn) {
+        //         return Response.redirect(new URL('/dashboard', nextUrl));
+        //     }
+        //     return true;
+        // },
     },
 } satisfies NextAuthConfig;
 
