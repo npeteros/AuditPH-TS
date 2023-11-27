@@ -1,0 +1,72 @@
+datasource db {
+    provider          = "postgresql"
+    url               = env("POSTGRES_PRISMA_URL")
+    shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://pris.ly/d/migrate-shadow
+}
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["referentialActions"] // You won't need this in Prisma 3.X or higher.
+}
+
+// Define the Transaction model
+model Transaction {
+    id                String     @id @default(uuid()) @db.Uuid
+    userId            String     @db.Uuid
+    budgetTypeId      Int
+    goalId            String?    @db.Uuid
+    transactioName    String
+    transactionAmount Int
+    user              User       @relation(fields: [userId], references: [id])
+    budgetType        BudgetType @relation(fields: [budgetTypeId], references: [id])
+    goal              Goal?      @relation(fields: [goalId], references: [id])
+}
+
+// Define the Goal model
+model Goal {
+    id          String        @id @default(uuid()) @db.Uuid
+    userId      String        @db.Uuid
+    goalName    String
+    goalCurrent Int           @default(0)
+    goalTarget  Int
+    user        User          @relation(fields: [userId], references: [id])
+    Transaction Transaction[]
+}
+
+// Define the Budget model
+model Budget {
+    id            String     @id @default(uuid()) @db.Uuid
+    userId        String     @db.Uuid
+    budgetTypeId  Int
+    budgetTotal   Float      @default(0.00)
+    budgetCurrent Float      @default(0.00)
+    user          User       @relation(fields: [userId], references: [id])
+    budgetType    BudgetType @relation(fields: [budgetTypeId], references: [id])
+}
+
+// Define the BudgetType model
+model BudgetType {
+    id          Int           @id @default(autoincrement())
+    typeName    String
+    color       String
+    Budget      Budget[]
+    Transaction Transaction[]
+}
+
+// Define the User model
+model User {
+    id           String        @id @default(uuid()) @db.Uuid
+    name         String        @db.VarChar(255)
+    email        String        @unique
+    password     String
+    income       Float         @default(0.00)
+    expenses     Float         @default(0.00)
+    goals        Int           @default(0)
+    budgets      Int           @default(0)
+    moneySaved   Int           @default(0)
+    transactions Int           @default(0)
+    totalBalance Float         @default(0.00)
+    Budget       Budget[]
+    Goal         Goal[]
+    Transaction  Transaction[]
+}

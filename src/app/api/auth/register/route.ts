@@ -1,12 +1,16 @@
 import bcrypt from 'bcrypt';
 import { NextResponse } from "next/server";
-import { User } from "@/lib/definitions";
-import { sql } from "@vercel/postgres";
+import type { User } from "@/lib/definitions";
+import prisma from '@/lib/prisma';
 
-async function checkUser(email: string): Promise<User | undefined> {
+async function checkUser(email: string): Promise<User | null> {
     try {
-        const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
-        return user.rows[0];
+        const user = await prisma.user.findUnique({
+            where: {
+                email,
+            },
+        });
+        return user;
     } catch (error) {
         throw new Error('Failed to fetch user.');
     }
@@ -15,12 +19,14 @@ async function checkUser(email: string): Promise<User | undefined> {
 async function regUser(userName: string, email: string, password: string): Promise<User | undefined> {
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await sql<User>`
-            INSERT INTO users 
-                (name, email, password)
-            VALUES
-                (${userName}, ${email}, ${hashedPassword})`;
-        return user.rows[0];
+        const user = await prisma.user.create({
+            data: {
+                name: userName,
+                email: email,
+                password: hashedPassword
+            }
+        })
+        return user;
     } catch (error) {
         console.error('Failed to register user:', error);
         throw new Error('Failed to register user.');

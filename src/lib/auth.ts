@@ -2,27 +2,26 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import z from 'zod';
 import bcrypt from 'bcrypt';
-
-import { sql } from '@vercel/postgres';
+import prisma from './prisma';
 
 import type { User } from '@/lib/definitions';
 import type { NextAuthConfig } from 'next-auth';
 
-
-async function getUser(email: string): Promise<User | undefined> {
+async function getUser(email: string): Promise<User | null> {
     try {
-        const user = await sql<User>`SELECT * FROM users WHERE email = ${email}`;
-        return user.rows[0];
+        const user = await prisma.user.findUnique({
+            where: {
+                email,
+            },
+        });
+        return user;
     } catch (error) {
-        console.error('Failed to fetch user: ', error);
         throw new Error('Failed to fetch user.');
     }
 }
 
 export const authConfig = {
-    pages: {
-        signIn: '/login',
-    },
+    debug: true,
     providers: [
         Credentials({
             async authorize(credentials) {
@@ -37,29 +36,20 @@ export const authConfig = {
                     const passwordsMatch = await bcrypt.compare(password, user.password);
 
                     if (passwordsMatch) {
-                        console.log("Successfully logged in: ", user)
                         return user;
                     }
                 }
-                console.log('Invalid credentials');
-                console.log("Invalid log in: ", credentials);
+                // console.log('Invalid credentials');
+                // console.log("Invalid log in: ", credentials);
                 return null;
             },
         }),
     ],
     callbacks: {
-        // authorized(params) {
-        //     console.log("Authorized: ", params)
-        //     const isLoggedIn = !!auth?.user;
-        //     const isOnDashboard = nextUrl.pathname.includes('/dashboard');
-        //     if (isOnDashboard) {
-        //         if (isLoggedIn) return true;
-        //         return false; // Redirect unauthenticated users to login page
-        //     } else if (isLoggedIn) {
-        //         return Response.redirect(new URL('/dashboard', nextUrl));
-        //     }
-        //     return true;
-        // },
+        authorized(params) {
+            // console.log('hi!!!')
+            return !!params.auth?.user;
+        },
     },
 } satisfies NextAuthConfig;
 

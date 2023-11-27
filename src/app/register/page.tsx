@@ -55,7 +55,6 @@ export default function Register() {
                     });
                 } catch (error) {  
                     console.log("Error during registration: ", error);
-                    
                 }
             }
         } else {

@@ -10,11 +10,13 @@ import ResponsiveNavLink from '@/components/ResponsiveNavLink';
 import { useSession } from 'next-auth/react';
 import { SignOut } from './Auth/SignOut';
 import ResponsiveNavText from './ResponsiveNavText';
+import { redirect } from 'next/navigation';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const pathName = usePathname();
     const { data: session } = useSession();
+    if(!session) return redirect('/login');
 
     return (
         <div className="min-h-screen bg-white dark:bg-neutral-800 bg-[url('/cover.svg')]">

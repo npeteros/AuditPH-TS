@@ -1,15 +1,15 @@
 export type User = {
-    id: string,
-    name: string,
-    email: string,
-    password: string,
-    income: number,
-    expenses: number,
-    goals: number,
-    budgets: number,
-    money_saved: number,
-    transactions: number,
-    total_balance: number
+    id: string;
+    name: string;
+    email: string;
+    password: string;
+    income: number;
+    expenses: number;
+    goals: number;
+    budgets: number;
+    moneySaved: number;
+    transactions: number;
+    totalBalance: number;
 };
 
 export type BudgetType = {
