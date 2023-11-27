@@ -7,6 +7,7 @@ export default async function ClientAuth({ children }: React.PropsWithChildren) 
     const session = await auth();
     if (session?.user)
         session.user = {
+            id: session.user.id,
             email: session.user.email,
             name: session.user.name
         };

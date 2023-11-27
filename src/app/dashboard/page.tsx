@@ -9,9 +9,10 @@ export default async function Page() {
     const session = await auth();
     const user = await prisma.user.findUnique({
         where: {
-            email: session?.user?.email,
+            email: session?.user?.email ?? undefined,
         },
-    })
+    });
+
 
 
     return (
