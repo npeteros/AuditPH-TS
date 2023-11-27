@@ -64,7 +64,7 @@ export default function Login() {
                     href="/register"
                     className="underline text-sm text-neutral-600 dark:text-neutral-200 dark:hover:text-gray-500 hover:text-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    Don't have an account?
+                    Don&apos;t have an account?
                 </Link>
                 
                 <LoginButton />
