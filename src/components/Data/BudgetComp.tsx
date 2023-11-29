@@ -2,7 +2,7 @@ import { Budget, BudgetType } from '@prisma/client';
 import DynamicComponentRenderer from './lib/DynamicComponentRenderer';
 import prisma from '@/lib/prisma';
 
-export default function BudgetComp({ budget, budgetType }: { budget: Budget, type: BudgetType }) {
+export default function BudgetComp({ budget, budgetType }: { budget: Budget, budgetType: BudgetType }) {
 
 
     return (

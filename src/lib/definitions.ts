@@ -42,3 +42,8 @@ export type Transactions = {
     name: string,
     amount: number
 };
+
+export type BudgetWithType = {
+    budget: Budget,
+    type: BudgetType
+}

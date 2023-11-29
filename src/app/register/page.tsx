@@ -9,7 +9,6 @@ import LoadingDots from '@/components/LoadingDots';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useFormStatus } from 'react-dom';
 
 export default function Register() {
 

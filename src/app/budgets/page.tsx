@@ -1,7 +1,7 @@
 "use client";
 
 import DivLink from "@/components/DivLink";
-import { Budget } from "@prisma/client";
+import { BudgetType, Budget } from "@prisma/client";
 import { useEffect, useState } from "react";
 import BudgetComp from "@/components/Data/BudgetComp";
 import { useSession } from "next-auth/react";
@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 
 export default function Page() {
 
-    const [budgets, setBudgets] = useState<Budget[]>([]);
+    const [budgets, setBudgets] = useState<(Budget & { budgetType: BudgetType})[] | null>([]);
     const { data: session } = useSession();
     if(!session) redirect('/login');
     
@@ -63,7 +63,7 @@ export default function Page() {
             <div className="my-12">
                 <span className="font-semibold text-xl text-black dark:text-white">My budget</span>
 
-                {budgets.map(budget =>
+                {budgets?.map(budget =>
                     <BudgetComp key={budget.id} budget={budget} budgetType={budget.budgetType} />
                 )}
             </div>
