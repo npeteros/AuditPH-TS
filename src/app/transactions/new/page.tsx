@@ -1,17 +1,91 @@
 'use client';
 
+import InputError from "@/components/InputError";
+import LoadingDots from "@/components/LoadingDots";
 import PrimaryButton from "@/components/PrimaryButton";
-import { useState } from "react";
+import { BudgetType, Goal } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const Page = () => {
+export default function Page() {
 
-    const [tranName, setTranName] = useState("");
-    const [budgetTypeId, setBudgetTypeId] = useState(0);
-    const [goalId, setGoalId] = useState(0);
-    const [amount, setAmount] = useState(0)
+
+    const { data: session } = useSession();
+    if (!session) redirect('/login');
+
+    const [newTransaction, setNewTransaction] = useState({
+        transactionName: '',
+        budgetTypeId: 0,
+        goalId: '',
+        transactionAmount: 0
+    });
+    const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
+    const [goals, setGoals] = useState<Goal[]>([]);
+    const [status, setStatus] = useState(0);
+    const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        const userEmail = session?.user?.email
+        const encodedValue = encodeURIComponent(String(userEmail));
+        async function fetchBudgetTypes() {
+            try {
+                fetch(`/api/transactionData?email=${encodedValue}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        setBudgetTypes(data.budgetTypes)
+                        setGoals(data.goals)
+                    })
+            } catch (error) {
+                console.error('Error fetching Transaction Data:', error);
+            }
+        }
+
+        fetchBudgetTypes()
+    }, [])
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (newTransaction) {
+            try {
+                setLoading(true);
+                fetch('/api/newTransaction', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        transactionName: newTransaction.transactionName,
+                        budgetTypeId: newTransaction.budgetTypeId,
+                        goalId: newTransaction.goalId,
+                        transactionAmount: newTransaction.transactionAmount
+                    })
+                }).then(async (res) => {
+                    const msg = await res.json();
+                    setStatus(res.status);
+                    setMessage(msg.message);
+
+                    if (res.status === 201) {
+                        setTimeout(() => {
+                            setLoading(false);
+                            router.push("/transactions");
+                        }, 2000);
+                    } else {
+                        setLoading(false)
+                    }
+                });
+            } catch (error) {
+                console.log("Error during creation of new budget: ", error);
+            }
+        }
     }
 
     return (
@@ -27,44 +101,40 @@ const Page = () => {
                         <input
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
                             type="text"
-                            onChange={e => setTranName(e.target.value)}
-                            value={tranName}
+                            onChange={e => setNewTransaction({ ...newTransaction, transactionName: e.target.value })}
+                            value={newTransaction.transactionName}
                             placeholder="Set the transaction's name"
                         />
                         <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an expense</label>
                         <select
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
-                            value={budgetTypeId}
-                            onChange={e => setBudgetTypeId(Number(e.target.value))}
+                            value={newTransaction.budgetTypeId}
+                            onChange={e => setNewTransaction({ ...newTransaction, budgetTypeId: Number(e.target.value) })}
                         >
-                            <option selected value={0}>Choose an expense</option>
-                            <option value="1">Bills</option>
-                            <option value="2">Clothing</option>
-                            <option value="3">Education</option>
-                            <option value="4">Entertainment</option>
-                            <option value="5">Food/Drinks</option>
-                            <option value="6">Groceries</option>
-                            <option value="7">Housing</option>
-                            <option value="8">Pets</option>
-                            <option value="9">Transportation</option>
-                            <option value="10">Travel</option>
+                            <option defaultValue={0}>Choose an expense</option>
+                            {
+                                budgetTypes.map((budgetType) =>
+                                (
+                                    <option key={budgetType.id} value={budgetType.id}>{budgetType?.typeName}</option>
+                                ))
+                            }
                         </select>
 
                         <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select aligned goal (optional)</label>
                         <select
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
-                            value={goalId}
-                            onChange={e => setGoalId(Number(e.target.value))}
+                            value={newTransaction.goalId}
+                            onChange={e => setNewTransaction({ ...newTransaction, goalId: e.target.value })}
                         >
-                            <option selected value={0}>Choose a goal (optional)</option>
-                            {/* {
-                                    goals.map(goal => (
-                                        <option key={goal.id} value={goal.id}>
-                                            {goal.goal}
-                                        </option>
-                                    ))
+                            <option defaultValue={0}>Choose a goal (optional)</option>
+                            {
+                                goals.map(goal => (
+                                    <option key={goal.id} value={goal.id}>
+                                        {goal.goalName}
+                                    </option>
+                                ))
 
-                                } */}
+                            }
                         </select>
 
                         <label htmlFor="budget_total" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set the transaction&apos;s amount</label>
@@ -73,18 +143,30 @@ const Page = () => {
                             <input
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 type="number"
-                                onChange={e => setAmount(Number(e.target.value))}
-                                value={amount}
+                                onChange={e => setNewTransaction({ ...newTransaction, transactionAmount: Number(e.target.value) })}
+                                value={newTransaction.transactionAmount}
                                 min={1}
                                 placeholder="Set the transaction's amount"
                             />
                         </div>
 
+                        <div className="mt-4">
+                            <InputError message={message} className={status === 201 ? 'text-emerald-500' : 'text-red-500'} />
+                        </div>
+
                         <PrimaryButton
-                            disabled={false}
+                            disabled={loading}
                             className="mt-8 mb-6 bg-neutral-600 dark:bg-neutral-800 hover:bg-neutral-800 w-full"
                         >
-                            <span className="mx-auto text-gray-900 text-white">Create Budget</span>
+                            {
+                                loading ? (
+                                    <div className="m-auto">
+                                        <LoadingDots color="#808080" />
+                                    </div>
+                                ) : (
+                                    <span className="mx-auto text-gray-900 text-white">Create Transaction</span>
+                                )
+                            }
                         </PrimaryButton>
                     </div>
                 </div>
@@ -93,5 +175,3 @@ const Page = () => {
 
     );
 }
-
-export default Page;

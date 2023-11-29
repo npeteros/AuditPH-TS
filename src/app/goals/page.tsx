@@ -28,7 +28,7 @@ export default function Page() {
                     .then(res => res.json())
                     .then(data => setGoals(data))
             } catch (error) {
-                console.error("Error fetching budgets: ", error);
+                console.error("Error fetching goals: ", error);
             }
         }
 

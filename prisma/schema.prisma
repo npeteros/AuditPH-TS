@@ -13,8 +13,9 @@ model Transaction {
     userId            String     @db.Uuid
     budgetTypeId      Int
     goalId            String?    @db.Uuid
-    transactioName    String
+    transactionName    String
     transactionAmount Int
+    createdAt         DateTime   @default(now())
     budgetType        BudgetType @relation(fields: [budgetTypeId], references: [id])
     goal              Goal?      @relation(fields: [goalId], references: [id])
     user              User       @relation(fields: [userId], references: [id])
