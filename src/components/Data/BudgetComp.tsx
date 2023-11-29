@@ -20,7 +20,7 @@ export default function BudgetComp({ budget, budgetType }: { budget: Budget, bud
                             </span>
                         </div>
                         <span className="text-sm font-medium text-black">
-                            &#36; {Number(budget.budgetCurrent).toLocaleString()} / {Number(budget.budgetTotal).toLocaleString()}
+                            &#8369; {Number(budget.budgetCurrent).toLocaleString()} / {Number(budget.budgetTotal).toLocaleString()}
                         </span>
                     </div>
                     <div className="flex justify-between items-center w-full">

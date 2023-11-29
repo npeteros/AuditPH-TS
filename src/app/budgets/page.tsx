@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 
 export default function Page() {
 
-    const [budgets, setBudgets] = useState<(Budget & { budgetType: BudgetType})[] | null>([]);
+    const [budgets, setBudgets] = useState<(Budget & { budgetType: BudgetType })[] | null>([]);
     const { data: session } = useSession();
     if(!session) redirect('/login');
     
@@ -34,8 +34,6 @@ export default function Page() {
 
         fetchBudgets();
     }, [])
-
-    console.log(budgets)
 
     return (
 
