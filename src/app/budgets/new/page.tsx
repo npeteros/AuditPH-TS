@@ -6,6 +6,7 @@ import { BudgetType } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import LoadingDots from "@/components/LoadingDots";
+import InputError from "@/components/InputError";
 
 export default function Page() {
 
@@ -15,6 +16,8 @@ export default function Page() {
     })
     const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
     const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState('');
+    const [status, setStatus] = useState(0)
     const router = useRouter();
 
     useEffect(() => {
@@ -48,6 +51,8 @@ export default function Page() {
                     })
                 }).then(async (res) => {
                     const msg = await res.json();
+                    setStatus(res.status);
+                    setMessage(msg.message);
 
                     if (res.status === 201) {
                         setTimeout(() => {
@@ -98,6 +103,10 @@ export default function Page() {
                                 min={1}
                                 placeholder="Set the budget's total"
                             />
+                        </div>
+
+                        <div className="mt-4">
+                            <InputError message={message} className={status === 201 ? 'text-emerald-500' : 'text-red-500'} />
                         </div>
 
                         <PrimaryButton

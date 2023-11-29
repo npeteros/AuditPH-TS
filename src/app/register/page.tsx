@@ -46,7 +46,7 @@ export default function Register() {
                         }),
                     }).then(async (res) => {
                         const msg = await res.json();
-                        
+
                         if (res.status === 201) {
                             setStatus(res.status);
                             setMessage(msg.message);
@@ -131,13 +131,7 @@ export default function Register() {
             </div>
 
             <div className="mt-4">
-                {
-                    status === 201 ?
-                        <InputError message={message} className='text-emerald-500' />
-                        :
-                        <InputError message={message} className='text-red-500' />
-                }
-
+                <InputError message={message} className={status === 201 ? 'text-emerald-500' : 'text-red-500'} />
             </div>
 
             <div className="flex items-center justify-end mt-4">
