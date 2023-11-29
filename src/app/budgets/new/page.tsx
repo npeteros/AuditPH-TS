@@ -64,7 +64,7 @@ export default function Page() {
                     }
                 });
             } catch (error) {
-                console.log("Error during posting new budget: ", error);
+                console.log("Error during creation of new budget: ", error);
             }
         }
     }
@@ -94,7 +94,7 @@ export default function Page() {
 
                         <label htmlFor="budget_total" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set a budget</label>
                         <div className="flex h-fit items-center">
-                            <span className="font-bold text-gray-900 dark:text-white -ml-4 mr-2">&#36;</span>
+                            <span className="font-bold text-gray-900 dark:text-white -ml-4 mr-2">&#8369;</span>
                             <input
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 type="number"

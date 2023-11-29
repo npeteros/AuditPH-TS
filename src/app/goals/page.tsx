@@ -1,8 +1,39 @@
+'use client';
+
+import GoalComp from "@/components/Data/GoalComp";
 import DivLink from "@/components/DivLink";
-import { Budget } from "@prisma/client";
+import { Goal } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const Page = () => {
+export default function Page() {
+
+    const [goals, setGoals] = useState<Goal[] | null>([]);
+    const { data: session } = useSession();
+    if(!session) redirect('/login');
+    
+
+    useEffect(() => {
+        async function fetchGoals() {
+            const userEmail = session?.user?.email
+            const encodedValue = encodeURIComponent(String(userEmail));
+            try {
+                fetch(`/api/getGoals?email=${encodedValue}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(res => res.json())
+                    .then(data => setGoals(data))
+            } catch (error) {
+                console.error("Error fetching budgets: ", error);
+            }
+        }
+
+        fetchGoals();
+    }, [])
 
     return (
 
@@ -28,13 +59,11 @@ const Page = () => {
             <div className="my-12">
                 <span className="font-semibold text-xl text-black dark:text-white">My goals</span>
                 <div className="grid grid-cols-2 gap-4 mt-3">
-                    {/* {goals.map(goal =>
-                            <Goal key={goal.id} goal={goal} />
-                        )} */}
+                    {goals?.map(goal =>
+                            <GoalComp key={goal.id} goal={goal} />
+                        )}
                 </div>
             </div>
         </div>
     );
 }
-
-export default Page;
