@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import { budget_types } from '../src/lib/data-placeholder';
-import { Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient()
 async function main() {

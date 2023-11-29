@@ -3,12 +3,19 @@
 import PrimaryButton from "@/components/PrimaryButton";
 import { useEffect, useState } from "react";
 import { BudgetType } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import LoadingDots from "@/components/LoadingDots";
 
 export default function Page() {
 
-    const [budgetTypeId, setBudgetTypeId] = useState(0);
-    const [budgetTotal, setBudgetTotal] = useState(0);
+    const [newBudget, setNewBudget] = useState({
+        budgetTypeId: 0,
+        budgetTotal: 0
+    })
     const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         async function fetchBudgetTypes() {
@@ -24,10 +31,37 @@ export default function Page() {
         fetchBudgetTypes()
     }, [])
 
-
-
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (newBudget) {
+            try {
+                setLoading(true);
+                fetch('/api/newBudget', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        budgetType: newBudget.budgetTypeId,
+                        budgetTotal: newBudget.budgetTotal
+                    })
+                }).then(async (res) => {
+                    const msg = await res.json();
+
+                    if (res.status === 201) {
+                        setTimeout(() => {
+                            setLoading(false)
+                            router.push("/budgets");
+                        }, 2000);
+                    } else {
+                        setLoading(false)
+                    }
+                });
+            } catch (error) {
+                console.log("Error during posting new budget: ", error);
+            }
+        }
     }
 
     return (
@@ -41,8 +75,8 @@ export default function Page() {
                         <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an expense</label>
                         <select
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
-                            value={budgetTypeId}
-                            onChange={e => setBudgetTypeId(Number(e.target.value))}
+                            value={newBudget.budgetTypeId}
+                            onChange={e => setNewBudget({ ...newBudget, budgetTypeId: Number(e.target.value) })}
                         >
                             <option value={0}>Choose an expense</option>
                             {
@@ -59,8 +93,8 @@ export default function Page() {
                             <input
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 type="number"
-                                onChange={e => setBudgetTotal(Number(e.target.value))}
-                                value={budgetTotal}
+                                onChange={e => setNewBudget({ ...newBudget, budgetTotal: Number(e.target.value) })}
+                                value={newBudget.budgetTotal}
                                 min={1}
                                 placeholder="Set the budget's total"
                             />
@@ -68,9 +102,17 @@ export default function Page() {
 
                         <PrimaryButton
                             className="mt-8 mb-6 bg-neutral-600 dark:bg-neutral-800 hover:bg-neutral-800 w-full"
-                            disabled={false}
+                            disabled={loading}
                         >
-                            <span className="mx-auto text-gray-900 text-white">Create Budget</span>
+                            {
+                                loading ? (
+                                    <div className="m-auto">
+                                        <LoadingDots color="#808080" />
+                                    </div>
+                                ) : (
+                                    <span className="mx-auto text-gray-900 text-white">Create Budget</span>
+                                )
+                            }
                         </PrimaryButton>
                     </div>
                 </div>

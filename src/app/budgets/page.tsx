@@ -1,6 +1,42 @@
-import DivLink from "@/components/DivLink";
+"use client";
 
-const Page = () => {
+import DivLink from "@/components/DivLink";
+import { Budget } from "@prisma/client";
+import { useEffect, useState } from "react";
+import BudgetComp from "@/components/Data/BudgetComp";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+
+export default function Page() {
+
+    const [budgets, setBudgets] = useState<Budget[]>([]);
+    const { data: session } = useSession();
+    if(!session) redirect('/login');
+    
+
+    useEffect(() => {
+        async function fetchBudgets() {
+            const userEmail = session?.user?.email
+            const encodedValue = encodeURIComponent(String(userEmail));
+            try {
+                fetch(`/api/getBudgets?email=${encodedValue}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(res => res.json())
+                    .then(data => setBudgets(data))
+            } catch (error) {
+                console.error("Error fetching budgets: ", error);
+            }
+        }
+
+        fetchBudgets();
+    }, [])
+
+    console.log(budgets)
+
     return (
 
         <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
@@ -27,12 +63,10 @@ const Page = () => {
             <div className="my-12">
                 <span className="font-semibold text-xl text-black dark:text-white">My budget</span>
 
-                {/* {budgets.map(budget =>
-                        <Budget key={budget.id} budget={budget} />
-                    )} */}
+                {budgets.map(budget =>
+                    <BudgetComp key={budget.id} budget={budget} budgetType={budget.budgetType} />
+                )}
             </div>
         </div>
     );
 }
-
-export default Page;

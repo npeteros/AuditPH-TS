@@ -1,15 +1,13 @@
-datasource db {
-    provider          = "postgresql"
-    url               = env("POSTGRES_PRISMA_URL")
-    shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://pris.ly/d/migrate-shadow
-}
-
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["referentialActions"] // You won't need this in Prisma 3.X or higher.
+    provider = "prisma-client-js"
 }
 
-// Define the Transaction model
+datasource db {
+    provider  = "postgresql"
+    url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+    directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
 model Transaction {
     id                String     @id @default(uuid()) @db.Uuid
     userId            String     @db.Uuid
@@ -17,12 +15,11 @@ model Transaction {
     goalId            String?    @db.Uuid
     transactioName    String
     transactionAmount Int
-    user              User       @relation(fields: [userId], references: [id])
     budgetType        BudgetType @relation(fields: [budgetTypeId], references: [id])
     goal              Goal?      @relation(fields: [goalId], references: [id])
+    user              User       @relation(fields: [userId], references: [id])
 }
 
-// Define the Goal model
 model Goal {
     id          String        @id @default(uuid()) @db.Uuid
     userId      String        @db.Uuid
@@ -33,18 +30,16 @@ model Goal {
     Transaction Transaction[]
 }
 
-// Define the Budget model
 model Budget {
     id            String     @id @default(uuid()) @db.Uuid
     userId        String     @db.Uuid
     budgetTypeId  Int
     budgetTotal   Float      @default(0.00)
     budgetCurrent Float      @default(0.00)
-    user          User       @relation(fields: [userId], references: [id])
     budgetType    BudgetType @relation(fields: [budgetTypeId], references: [id])
+    user          User       @relation(fields: [userId], references: [id])
 }
 
-// Define the BudgetType model
 model BudgetType {
     id          Int           @id @default(autoincrement())
     typeName    String
@@ -53,7 +48,6 @@ model BudgetType {
     Transaction Transaction[]
 }
 
-// Define the User model
 model User {
     id           String        @id @default(uuid()) @db.Uuid
     name         String        @db.VarChar(255)

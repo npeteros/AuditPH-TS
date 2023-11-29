@@ -46,8 +46,7 @@ export default function Register() {
                         }),
                     }).then(async (res) => {
                         const msg = await res.json();
-
-
+                        
                         if (res.status === 201) {
                             setStatus(res.status);
                             setMessage(msg.message);
