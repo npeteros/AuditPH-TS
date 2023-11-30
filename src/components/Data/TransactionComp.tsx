@@ -18,8 +18,13 @@ export default function TransactionComp({ transaction, budgetType }: { transacti
                                 {transaction.transactionName}
                             </span>
                         </div>
-                        <span className="text-sm font-medium text-black font-extrabold my-1">
-                            -&#36; {transaction.transactionAmount}
+                        <span className="text-sm font-medium font-extrabold my-1">
+                            {
+                                transaction.transactionType === 'INCOME' ?
+                                    <span className="text-emerald-500">+ &#36; {transaction.transactionAmount.toLocaleString()}</span>
+                                    :
+                                    <span className="text-red-500">- &#36; {transaction.transactionAmount.toLocaleString()}</span>
+                            }
                         </span>
                     </div>
                     <div className="flex justify-between items-center">
@@ -27,7 +32,7 @@ export default function TransactionComp({ transaction, budgetType }: { transacti
                             {budgetType.typeName}
                         </span>
                         <span className="text-sm font-light text-black">
-                            {date.toLocaleDateString('en-us', { weekday:"short", year:"numeric", month:"short", day:"numeric"})}
+                            {date.toLocaleDateString('en-us', { weekday: "short", year: "numeric", month: "short", day: "numeric" })}
                         </span>
                     </div>
                 </div>

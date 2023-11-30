@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 export default async function Page() {
     const session = await auth();
-    if(!session) return redirect('/login');
+    if (!session) return redirect('/login');
     const user = await prisma.user.findUnique({
         where: {
             email: session?.user?.email ?? undefined
@@ -35,7 +35,7 @@ export default async function Page() {
                                     </svg>
                                     <span className='ml-6 text-justify'>
                                         <span>Income</span><br />
-                                        <span className='text-xl font-bold'>$&nbsp;{user?.income}</span>
+                                        <span className='text-xl font-bold'>&#8369;&nbsp;{user?.income.toLocaleString()}</span>
                                     </span>
                                 </div>
                             </DivLink>
@@ -53,7 +53,7 @@ export default async function Page() {
                                     </svg>
                                     <span className='ml-6 text-justify'>
                                         <span>Expenses</span><br />
-                                        <span className='text-xl font-bold'>$&nbsp;{user?.expenses}</span>
+                                        <span className='text-xl font-bold'>&#8369;&nbsp;{user?.expenses.toLocaleString()}</span>
                                     </span>
                                 </div>
                             </DivLink>
@@ -106,7 +106,10 @@ export default async function Page() {
                                                 <path d="M12 18v3m0-18v3-3Z"></path>
                                             </svg>
                                         </div>
-                                        <span className='p-2 m-4 font-bold'>0%</span>
+                                        <span className='p-2 m-4 font-bold'>{
+                                            Number(user?.income) / Number(user?.expenses)
+                                        }
+                                        %</span>
                                     </div>
                                     <span className="p-2 m-2 text-base">Money Saved</span>
                                 </div>

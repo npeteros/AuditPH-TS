@@ -16,6 +16,7 @@ export default function Page() {
 
     const [newTransaction, setNewTransaction] = useState({
         transactionName: '',
+        transactionType: 'EXPENSE',
         budgetTypeId: 0,
         goalId: '',
         transactionAmount: 0
@@ -66,7 +67,8 @@ export default function Page() {
                         transactionName: newTransaction.transactionName,
                         budgetTypeId: newTransaction.budgetTypeId,
                         goalId: newTransaction.goalId,
-                        transactionAmount: newTransaction.transactionAmount
+                        transactionAmount: newTransaction.transactionAmount,
+                        transactionType: newTransaction.transactionType
                     })
                 }).then(async (res) => {
                     const msg = await res.json();
@@ -97,77 +99,96 @@ export default function Page() {
                     <div className="text-lg font-bold text-center text-gray-900 dark:text-white mb-4">Create a Transaction</div>
 
                     <div className="mx-6">
-                        <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set transaction name</label>
-                        <input
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
-                            type="text"
-                            onChange={e => setNewTransaction({ ...newTransaction, transactionName: e.target.value })}
-                            value={newTransaction.transactionName}
-                            placeholder="Set the transaction's name"
-                        />
-                        <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an expense</label>
-                        <select
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
-                            value={newTransaction.budgetTypeId}
-                            onChange={e => setNewTransaction({ ...newTransaction, budgetTypeId: Number(e.target.value) })}
-                        >
-                            <option defaultValue={0}>Choose an expense</option>
-                            {
-                                budgetTypes.map((budgetType) =>
-                                (
-                                    <option key={budgetType.id} value={budgetType.id}>{budgetType?.typeName}</option>
-                                ))
-                            }
-                        </select>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-0">
+                            <div>
+                                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set transaction name</label>
+                                <input
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
+                                    type="text"
+                                    onChange={e => setNewTransaction({ ...newTransaction, transactionName: e.target.value })}
+                                    value={newTransaction.transactionName}
+                                    placeholder="Set the transaction's name"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set transaction type</label>
+                                <select
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
+                                    value={newTransaction.transactionType}
+                                    onChange={e => setNewTransaction({ ...newTransaction, transactionType: e.target.value })}
+                                >
+                                    <option defaultValue="EXPENSE">Expense</option>
+                                    <option value="INCOME">Income</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an expense</label>
+                                <select
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
+                                    value={newTransaction.budgetTypeId}
+                                    onChange={e => setNewTransaction({ ...newTransaction, budgetTypeId: Number(e.target.value) })}
+                                >
+                                    <option defaultValue={0}>Choose an expense</option>
+                                    {
+                                        budgetTypes.map((budgetType) =>
+                                        (
+                                            <option key={budgetType.id} value={budgetType.id}>{budgetType?.typeName}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                            <div>
+                                <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select aligned goal (optional)</label>
+                                <select
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
+                                    value={newTransaction.goalId}
+                                    onChange={e => setNewTransaction({ ...newTransaction, goalId: e.target.value })}
+                                >
+                                    <option defaultValue={0}>Choose a goal (optional)</option>
+                                    {
+                                        goals.map(goal => (
+                                            <option key={goal.id} value={goal.id}>
+                                                {goal.goalName}
+                                            </option>
+                                        ))
 
-                        <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select aligned goal (optional)</label>
-                        <select
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
-                            value={newTransaction.goalId}
-                            onChange={e => setNewTransaction({ ...newTransaction, goalId: e.target.value })}
-                        >
-                            <option defaultValue={0}>Choose a goal (optional)</option>
-                            {
-                                goals.map(goal => (
-                                    <option key={goal.id} value={goal.id}>
-                                        {goal.goalName}
-                                    </option>
-                                ))
+                                    }
+                                </select>
+                            </div>
+                            <div className="col-span-2">
+                                <label htmlFor="budget_total" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set the transaction&apos;s amount</label>
+                                <div className="flex h-fit items-center">
+                                    <span className="font-bold text-gray-900 dark:text-white -ml-4 mr-2">&#8369;</span>
+                                    <input
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        type="number"
+                                        onChange={e => setNewTransaction({ ...newTransaction, transactionAmount: Number(e.target.value) })}
+                                        value={newTransaction.transactionAmount}
+                                        min={1}
+                                        placeholder="Set the transaction's amount"
+                                    />
+                                </div>
+                            </div>
 
-                            }
-                        </select>
+                            <div className="mt-4 col-span-2">
+                                <InputError message={message} className={status === 201 ? 'text-emerald-500' : 'text-red-500'} />
+                            </div>
 
-                        <label htmlFor="budget_total" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set the transaction&apos;s amount</label>
-                        <div className="flex h-fit items-center">
-                            <span className="font-bold text-gray-900 dark:text-white -ml-4 mr-2">&#8369;</span>
-                            <input
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                type="number"
-                                onChange={e => setNewTransaction({ ...newTransaction, transactionAmount: Number(e.target.value) })}
-                                value={newTransaction.transactionAmount}
-                                min={1}
-                                placeholder="Set the transaction's amount"
-                            />
+                            <PrimaryButton
+                                disabled={loading}
+                                className="mt-8 mb-6 bg-neutral-600 dark:bg-neutral-800 hover:bg-neutral-800 w-full col-span-2"
+                            >
+                                {
+                                    loading ? (
+                                        <div className="m-auto">
+                                            <LoadingDots color="#808080" />
+                                        </div>
+                                    ) : (
+                                        <span className="mx-auto text-gray-900 text-white">Create Transaction</span>
+                                    )
+                                }
+                            </PrimaryButton>
                         </div>
-
-                        <div className="mt-4">
-                            <InputError message={message} className={status === 201 ? 'text-emerald-500' : 'text-red-500'} />
-                        </div>
-
-                        <PrimaryButton
-                            disabled={loading}
-                            className="mt-8 mb-6 bg-neutral-600 dark:bg-neutral-800 hover:bg-neutral-800 w-full"
-                        >
-                            {
-                                loading ? (
-                                    <div className="m-auto">
-                                        <LoadingDots color="#808080" />
-                                    </div>
-                                ) : (
-                                    <span className="mx-auto text-gray-900 text-white">Create Transaction</span>
-                                )
-                            }
-                        </PrimaryButton>
                     </div>
                 </div>
             </form>
