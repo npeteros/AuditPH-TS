@@ -6,7 +6,7 @@ export default async function Page() {
     const session = await auth();
     return (
         <div className="relative sm:flex justify-center items-center min-h-screen bg-center bg-white dark:bg-neutral-800 bg-[url('/cover.svg')]">
-            <div className="sm:fixed w-screen h-20 sm:top-0 border-2 border-transparent border-b-neutral-200 dark:border-b-black  bg-white dark:bg-neutral-800 dark:border-transparent dark:border-2 dark:border-b-gray-500">
+            <div className="sm:fixed w-screen h-20 sm:top-0 border-2 border-transparent border-b-neutral-200 bg-white dark:bg-neutral-800 dark:border-transparent dark:border-2 dark:border-b-gray-500">
                 <div className="fixed top-0 right-0 p-6 w-fit text-right mt-1">
                     {
                         session?.user ? (

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-function AuditLogo({ className }: {className: string}) {
+function AuditLogo({ className }: { className: string }) {
     return (
         <>
             <div className='hidden dark:block'>

@@ -58,7 +58,7 @@ export default function Page() {
 
             <div className="my-12">
                 <span className="font-semibold text-xl text-black dark:text-white">My goals</span>
-                <div className="grid grid-cols-2 gap-4 mt-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                     {goals?.map(goal =>
                             <GoalComp key={goal.id} goal={goal} />
                         )}

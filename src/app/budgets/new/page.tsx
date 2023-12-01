@@ -74,16 +74,16 @@ export default function Page() {
             <form onSubmit={submit}>
                 <div className="bg-neutral-200 dark:bg-neutral-700 rounded-lg p-4">
 
-                    <div className="text-lg font-bold text-center text-gray-900 dark:text-white mb-4">Create a Budget</div>
+                    <div className="text-2xl font-bold text-center text-gray-900 dark:text-white my-4">Create a Budget</div>
 
                     <div className="mx-6">
-                        <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an expense</label>
+                        <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select a budget type</label>
                         <select
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
                             value={newBudget.budgetTypeId}
                             onChange={e => setNewBudget({ ...newBudget, budgetTypeId: Number(e.target.value) })}
                         >
-                            <option value={0}>Choose an expense</option>
+                            <option value={0}>Choose a budget type</option>
                             {
                                 budgetTypes.map((budgetType) =>
                                 (
