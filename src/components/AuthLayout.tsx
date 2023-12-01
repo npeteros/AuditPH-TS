@@ -31,16 +31,16 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink href='/dashboard' active={pathName ? pathName.includes("/dashboard") : false} className='text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
+                                <NavLink href='/dashboard' active={pathName ? pathName.includes("/dashboard") : false} className='dark:text-slate-100'>
                                     Dashboard
                                 </NavLink>
-                                <NavLink href='/goals' active={pathName ? pathName.includes("/goals") : false} className=' text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
+                                <NavLink href='/goals' active={pathName ? pathName.includes("/goals") : false} className='dark:text-slate-100'>
                                     Goals
                                 </NavLink>
-                                <NavLink href='/budgets' active={pathName ? pathName.includes("/budgets") : false} className=' text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
+                                <NavLink href='/budgets' active={pathName ? pathName.includes("/budgets") : false} className='dark:text-slate-100'>
                                     Budgets
                                 </NavLink>
-                                <NavLink href='/transactions' active={pathName ? pathName.includes("/transactions") : false} className=' text-neutral-800 hover:text-neutral-200 dark:text-slate-100'>
+                                <NavLink href='/transactions' active={pathName ? pathName.includes("/transactions") : false} className='dark:text-slate-100'>
                                     Transactions
                                 </NavLink>
                             </div>
@@ -53,7 +53,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                                         <span className="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                className="inline-flex items-center px-4 py-3 border border-transparent text-sm leading-4 font-medium rounded-md text-neutral-800 dark:text-white hover:dark:text-neutral-400 hover:text-neutral-900 hover:bold focus:outline-none transition ease-in-out duration-150 bg-neutral-50 shadow-lg dark:bg-neutral-600"
+                                                className="inline-flex items-center px-4 py-3 border border-transparent text-sm leading-4 font-medium rounded-md text-neutral-600 dark:text-white hover:dark:text-neutral-400 hover:text-neutral-900 hover:bold focus:outline-none transition ease-in-out duration-150 bg-neutral-50 shadow-lg dark:bg-neutral-600"
                                             >
                                                 {session?.user?.name}
 
