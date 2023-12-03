@@ -1,39 +1,16 @@
-"use client";
 
 import DivLink from "@/components/DivLink";
-import { BudgetType, Budget } from "@prisma/client";
-import { useEffect, useState } from "react";
-import BudgetComp from "@/components/Data/BudgetComp";
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { fetchBudgets } from "@/lib/data";
+import { auth } from "@/lib/auth";
+import BudgetComp from "@/components/Data/BudgetComp";
 
-export default function Page() {
+export default async function Page() {
 
-    const [budgets, setBudgets] = useState<(Budget & { budgetType: BudgetType })[] | null>([]);
-    const { data: session } = useSession();
+    const session = await auth();
     if (!session) redirect('/login');
+    const budgets = await fetchBudgets(String(session?.user?.email))
 
-
-    useEffect(() => {
-        async function fetchBudgets() {
-            const userEmail = session?.user?.email
-            const encodedValue = encodeURIComponent(String(userEmail));
-            try {
-                fetch(`/api/getBudgets?email=${encodedValue}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
-                    .then(res => res.json())
-                    .then(data => setBudgets(data))
-            } catch (error) {
-                console.error("Error fetching budgets: ", error);
-            }
-        }
-
-        fetchBudgets();
-    }, [])
 
     return (
         <>
@@ -62,12 +39,12 @@ export default function Page() {
                 <div className="max-w-4xl mx-auto">
                     <div className="my-12">
                         <span className="font-semibold text-xl text-black dark:text-white">My budget</span>
-
                         <div className="grid grid-cols-2 gap-4 mt-3">
                             {budgets?.map(budget =>
                                 <BudgetComp key={budget.id} budget={budget} budgetType={budget.budgetType} />
                             )}
                         </div>
+
                     </div>
                 </div>
             </div>

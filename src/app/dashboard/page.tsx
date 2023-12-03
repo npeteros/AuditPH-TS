@@ -107,9 +107,16 @@ export default async function Page() {
                                             </svg>
                                         </div>
                                         <span className='p-2 m-4 font-bold'>{
-                                            Number(user?.income) / Number(user?.expenses)
+                                            (
+                                                isNaN(Math.round((Number(user?.expenses) / Number(user?.income)) * 100)) ||
+                                                !isFinite(Math.round((Number(user?.expenses) / Number(user?.income)) * 100))
+                                            )
+                                                ?
+                                                    "0"
+                                                :
+                                                    Math.round((Number(user?.expenses) / Number(user?.income)) * 100)
                                         }
-                                        %</span>
+                                            %</span>
                                     </div>
                                     <span className="p-2 m-2 text-base">Money Saved</span>
                                 </div>

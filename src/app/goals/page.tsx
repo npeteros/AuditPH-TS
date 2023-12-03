@@ -1,39 +1,14 @@
-'use client';
-
 import GoalComp from "@/components/Data/GoalComp";
 import DivLink from "@/components/DivLink";
-import { Goal } from "@prisma/client";
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
+import { auth } from "@/lib/auth";
+import { fetchGoals } from "@/lib/data";
 
-export default function Page() {
+export default async function Page() {
 
-    const [goals, setGoals] = useState<Goal[] | null>([]);
-    const { data: session } = useSession();
+    const session = await auth();
     if(!session) redirect('/login');
-    
-
-    useEffect(() => {
-        async function fetchGoals() {
-            const userEmail = session?.user?.email
-            const encodedValue = encodeURIComponent(String(userEmail));
-            try {
-                fetch(`/api/getGoals?email=${encodedValue}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
-                    .then(res => res.json())
-                    .then(data => setGoals(data))
-            } catch (error) {
-                console.error("Error fetching goals: ", error);
-            }
-        }
-
-        fetchGoals();
-    }, [])
+    const goals = await fetchGoals(String(session?.user?.email))
 
     return (
 

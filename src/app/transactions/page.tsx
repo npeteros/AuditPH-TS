@@ -1,39 +1,14 @@
-"use client";
-
 import TransactionComp from "@/components/Data/TransactionComp";
 import DivLink from "@/components/DivLink";
-import { BudgetType, Goal, Transaction } from "@prisma/client";
-import { useSession } from "next-auth/react";
+import { auth } from "@/lib/auth";
+import { fetchTransactions } from "@/lib/data";
 import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
 
-export default function Page() {
+export default async function Page() {
 
-    const [transactions, setTransactions] = useState<(Transaction & { budgetType: BudgetType, goal: Goal })[] | null>([]);
-    const { data: session } = useSession();
+    const session = await auth();
     if(!session) redirect('/login');
-    
-
-    useEffect(() => {
-        async function fetchTransactions() {
-            const userEmail = session?.user?.email
-            const encodedValue = encodeURIComponent(String(userEmail));
-            try {
-                fetch(`/api/getTransactions?email=${encodedValue}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
-                    .then(res => res.json())
-                    .then(data => setTransactions(data))
-            } catch (error) {
-                console.error("Error fetching goals: ", error);
-            }
-        }
-
-        fetchTransactions();
-    }, [])
+    const transactions = await fetchTransactions(String(session?.user?.email));
 
     return (
 
