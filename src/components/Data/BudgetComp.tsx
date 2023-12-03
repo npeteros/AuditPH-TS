@@ -5,7 +5,7 @@ export default function BudgetComp({ budget, budgetType }: { budget: Budget, bud
 
 
     return (
-        <div className="my-3 bg-white shadow-sm rounded-3xl p-6">
+        <div className="my-2 bg-white shadow-sm rounded-3xl p-6">
             <div className="flex">
                 <div className='rounded-full w-fit p-3 mr-3' style={{ backgroundColor: budgetType?.color }}>
                     <DynamicComponentRenderer componentName={budgetType?.typeName} />
@@ -23,7 +23,7 @@ export default function BudgetComp({ budget, budgetType }: { budget: Budget, bud
                         </span>
                     </div>
                     <div className="flex justify-between items-center w-full">
-                        <div className="w-3/5 bg-gray-200 rounded-full h-2.5 dark:bg-gray-200">
+                        <div className="w-4/5 bg-gray-200 rounded-full h-2.5 dark:bg-gray-200">
                             <div className="bg-blue-400 h-2.5 rounded-full" style={{ width: `${(budget.budgetCurrent / budget.budgetTotal) * 100}%` }} />
                         </div>
                         <span className="text-sm font-medium text-black">

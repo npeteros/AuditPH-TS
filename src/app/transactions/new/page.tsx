@@ -19,7 +19,7 @@ export default function Page() {
         transactionType: 'EXPENSE',
         budgetTypeId: 0,
         goalId: '',
-        transactionAmount: 0
+        transactionAmount: ''
     });
     const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
     const [goals, setGoals] = useState<Goal[]>([]);
@@ -162,8 +162,8 @@ export default function Page() {
                                     <input
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         type="number"
-                                        onChange={e => setNewTransaction({ ...newTransaction, transactionAmount: Number(e.target.value) })}
-                                        value={newTransaction.transactionAmount}
+                                        onChange={e => setNewTransaction({ ...newTransaction, transactionAmount: e.target.value })}
+                                        value={newTransaction.transactionAmount || ''}
                                         min={1}
                                         placeholder="Set the transaction's amount"
                                     />

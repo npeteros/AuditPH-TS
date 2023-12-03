@@ -12,7 +12,7 @@ export default function Page() {
 
     const [newBudget, setNewBudget] = useState({
         budgetTypeId: 0,
-        budgetTotal: 0
+        budgetTotal: ''
     })
     const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
     const [loading, setLoading] = useState(false);
@@ -98,8 +98,8 @@ export default function Page() {
                             <input
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 type="number"
-                                onChange={e => setNewBudget({ ...newBudget, budgetTotal: Number(e.target.value) })}
-                                value={newBudget.budgetTotal}
+                                onChange={e => setNewBudget({ ...newBudget, budgetTotal: e.target.value })}
+                                value={newBudget.budgetTotal || ''}
                                 min={1}
                                 placeholder="Set the budget's total"
                             />

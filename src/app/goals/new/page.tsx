@@ -10,7 +10,7 @@ export default function Page() {
 
     const [newGoal, setNewGoal] = useState({
         goalName: '',
-        goalTarget: 0
+        goalTarget: ''
     });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
@@ -75,8 +75,8 @@ export default function Page() {
                             <input
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 type="number"
-                                onChange={e => setNewGoal({ ...newGoal, goalTarget: Number(e.target.value) })}
-                                value={newGoal.goalTarget}
+                                onChange={e => setNewGoal({ ...newGoal, goalTarget: e.target.value })}
+                                value={newGoal.goalTarget || ''}
                                 placeholder="Set the goal's total"
                                 min={1}
                             />

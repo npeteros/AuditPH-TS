@@ -39,7 +39,7 @@ export default async function Page() {
                 <div className="max-w-4xl mx-auto">
                     <div className="my-12">
                         <span className="font-semibold text-xl text-black dark:text-white">My budget</span>
-                        <div className="grid grid-cols-2 gap-4 mt-3">
+                        <div className="lg:grid lg:grid-cols-2 lg:gap-x-4 mt-3">
                             {budgets?.map(budget =>
                                 <BudgetComp key={budget.id} budget={budget} budgetType={budget.budgetType} />
                             )}
