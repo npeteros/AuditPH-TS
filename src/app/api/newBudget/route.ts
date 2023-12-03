@@ -26,6 +26,16 @@ async function postBudget(userId: string, budgetTypeId: number, budgetTotal: num
                 budgetTotal
             }
         })
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                budgets: {
+                    increment: 1
+                }
+            }
+        })
         return newBudget;
     } catch (error) {
         console.error('Failed to create new budget:', error);
@@ -36,14 +46,9 @@ async function postBudget(userId: string, budgetTypeId: number, budgetTotal: num
 export async function POST(req: Request) {
     const session = await auth();
     if(!session) return redirect('/login');
-    const user = await prisma.user.update({
+    const user = await prisma.user.findUnique({
         where: {
             email: session?.user?.email ?? undefined
-        },
-        data: {
-            budgets: {
-                increment: 1
-            }
         }
     });
     
@@ -53,7 +58,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "Budget already exists" }, { status: 400 });
     } else {
         if(user) {
-            await postBudget(user.id, budgetType, budgetTotal);
+            await postBudget(user.id, budgetType, Number(budgetTotal));
             return NextResponse.json({ message: "Budget successfully created" }, { status: 201 });
         }
     }

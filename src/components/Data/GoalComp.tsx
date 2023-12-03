@@ -1,4 +1,8 @@
 import { Goal } from "@prisma/client";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+ 
+dayjs.extend(relativeTime);
 
 export default function GoalComp({ goal }: { goal: Goal }){
     return (
@@ -18,6 +22,9 @@ export default function GoalComp({ goal }: { goal: Goal }){
                     </p>
                     <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-200">
                         <div className="bg-blue-400 h-2.5 rounded-full" style={{ width: `${(goal.goalCurrent / goal.goalTarget) * 100}%` }} />
+                    </div>
+                    <div className="mt-4 -mb-2">
+                        <span className={dayjs(goal.goalDeadline).diff(dayjs().format(), "h") <= 24 ? "text-red-800 text-xs" : "text-emerald-500 text-xs"}>Deadline { dayjs(goal.goalDeadline).fromNow() }</span>
                     </div>
                 </div>
 

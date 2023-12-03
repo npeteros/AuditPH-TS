@@ -11,13 +11,13 @@ datasource db {
 model Transaction {
     id                String          @id @default(uuid()) @db.Uuid
     userId            String          @db.Uuid
-    budgetTypeId      Int
+    budgetTypeId      Int?
     goalId            String?         @db.Uuid
     transactionName   String
     transactionAmount Int
     createdAt         DateTime        @default(now())
     transactionType   TransactionType @default(EXPENSE)
-    budgetType        BudgetType      @relation(fields: [budgetTypeId], references: [id])
+    budgetType        BudgetType?      @relation(fields: [budgetTypeId], references: [id])
     goal              Goal?           @relation(fields: [goalId], references: [id])
     user              User            @relation(fields: [userId], references: [id])
 }
@@ -28,13 +28,14 @@ enum TransactionType {
 }
 
 model Goal {
-    id          String        @id @default(uuid()) @db.Uuid
-    userId      String        @db.Uuid
-    goalName    String
-    goalCurrent Int           @default(0)
-    goalTarget  Int
-    user        User          @relation(fields: [userId], references: [id])
-    Transaction Transaction[]
+    id           String        @id @default(uuid()) @db.Uuid
+    userId       String        @db.Uuid
+    goalName     String
+    goalCurrent  Int           @default(0)
+    goalTarget   Int
+    goalDeadline DateTime      @default(now())
+    user         User          @relation(fields: [userId], references: [id])
+    Transaction  Transaction[]
 }
 
 model Budget {

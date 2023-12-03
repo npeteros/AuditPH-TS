@@ -8,6 +8,7 @@ import Housing from "./BudgetTypes/Housing";
 import Pets from "./BudgetTypes/Pets";
 import Transportation from "./BudgetTypes/Transportation";
 import Travel from "./BudgetTypes/Travel";
+import Undefined from "./BudgetTypes/Undefined"
 
 type ComponentObject = {
     [key: string]: React.ComponentType<any>;
@@ -24,6 +25,7 @@ const BudgetMappings: ComponentObject = {
     'Pets': Pets,
     'Transportation': Transportation,
     'Travel': Travel,
+    'Undefined': Undefined
 };
 
 const DynamicComponentRenderer = ({ componentName }: { componentName: string | undefined }) => {

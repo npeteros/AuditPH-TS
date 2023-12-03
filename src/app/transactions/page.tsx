@@ -34,7 +34,10 @@ export default async function Page() {
             <div className="my-12">
                 <span className="font-semibold text-xl text-black dark:text-white">My transactions</span>
                 {transactions?.map(transaction =>
-                    <TransactionComp key={transaction.id} transaction={transaction} budgetType={transaction.budgetType} />
+                    transaction.budgetType ?
+                        <TransactionComp key={transaction.id} transaction={transaction} budgetType={transaction.budgetType} />
+                    :
+                        <TransactionComp key={transaction.id} transaction={transaction} budgetType={undefined} />
                 )}
             </div>
         </div>

@@ -101,21 +101,23 @@ export default function Page() {
                     <div className="mx-6">
                         <div className="grid grid-cols-2 gap-x-4 gap-y-0">
                             <div>
-                                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set transaction name</label>
+                                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set transaction name <span className="dark:text-red-500 font-normal">*</span></label>
                                 <input
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
                                     type="text"
                                     onChange={e => setNewTransaction({ ...newTransaction, transactionName: e.target.value })}
                                     value={newTransaction.transactionName}
                                     placeholder="Set the transaction's name"
+                                    required
                                 />
                             </div>
                             <div>
-                                <label htmlFor="type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set transaction type</label>
+                                <label htmlFor="type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set transaction type <span className="dark:text-red-500 font-normal">*</span></label>
                                 <select
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
                                     value={newTransaction.transactionType}
                                     onChange={e => setNewTransaction({ ...newTransaction, transactionType: e.target.value })}
+                                    required
                                 >
                                     <option defaultValue="EXPENSE">Expense</option>
                                     <option value="INCOME">Income</option>
@@ -128,17 +130,17 @@ export default function Page() {
                                     value={newTransaction.budgetTypeId}
                                     onChange={e => setNewTransaction({ ...newTransaction, budgetTypeId: Number(e.target.value) })}
                                 >
-                                    <option defaultValue={0}>Choose an expense</option>
+                                    <option defaultValue={0}>Choose an expense (optional)</option>
                                     {
                                         budgetTypes.map((budgetType) =>
                                         (
-                                            <option key={budgetType.id} value={budgetType.id}>{budgetType?.typeName}</option>
+                                            <option key={budgetType.id} value={budgetType.id}>{budgetType.typeName}</option>
                                         ))
                                     }
                                 </select>
                             </div>
                             <div>
-                                <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select aligned goal (optional)</label>
+                                <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select aligned goal</label>
                                 <select
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
                                     value={newTransaction.goalId}
@@ -156,7 +158,7 @@ export default function Page() {
                                 </select>
                             </div>
                             <div className="col-span-2">
-                                <label htmlFor="budget_total" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set the transaction&apos;s amount</label>
+                                <label htmlFor="budget_total" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set the transaction&apos;s amount <span className="dark:text-red-500 font-normal">*</span></label>
                                 <div className="flex h-fit items-center">
                                     <span className="font-bold text-gray-900 dark:text-white -ml-4 mr-2">&#8369;</span>
                                     <input
@@ -166,6 +168,7 @@ export default function Page() {
                                         value={newTransaction.transactionAmount || ''}
                                         min={1}
                                         placeholder="Set the transaction's amount"
+                                        required
                                     />
                                 </div>
                             </div>
