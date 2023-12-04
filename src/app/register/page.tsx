@@ -19,8 +19,12 @@ export default function Register() {
         confirmPass: ''
     });
 
-    const [message, setMessage] = useState('')
-    const [status, setStatus] = useState(0)
+    const [errorMessages, setErrorMessages] = useState({
+        user: '',
+        email: '',
+        password: '',
+        success: ''
+    });
     const [loading, setLoading] = useState(false)
     const router = useRouter();
 
@@ -29,7 +33,7 @@ export default function Register() {
 
         if (user) {
             if (user.password !== user.confirmPass) {
-                setMessage("Error: Passwords do not match!");
+                setErrorMessages({ ...errorMessages, password: "Error: Passwords do not match!" });
             } else {
                 try {
                     setLoading(true)
@@ -47,14 +51,22 @@ export default function Register() {
                         const msg = await res.json();
 
                         if (res.status === 201) {
-                            setStatus(res.status);
-                            setMessage(msg.message);
+                            const successMsg = msg.message.find((item: { path: [string] }) => item.path && item.path.includes('success'));
+                            setErrorMessages({
+                                user: '',
+                                email: '',
+                                password: '',
+                                success: successMsg?.message });
                             setLoading(false)
                             setTimeout(() => {
                                 router.push("/login");
                             }, 2000);
                         } else {
-                            setMessage(msg.message);
+                            const userError = msg.message.find((item: { path: [string] }) => item.path && item.path.includes('userName'));
+                            const passwordError = msg.message.find((item: { path: [string] }) => item.path && item.path.includes('password'));
+                            const emailError = msg.message.find((item: { path: [string] }) => item.path && item.path.includes('email'));
+
+                            setErrorMessages({...errorMessages, user: userError?.message, email: emailError?.message, password: passwordError?.message })
                             setLoading(false)
                         }
                     });
@@ -63,7 +75,7 @@ export default function Register() {
                 }
             }
         } else {
-            setMessage("Error: All fields are necessary!");
+            setErrorMessages({ ...errorMessages, password: "Error: All fields are necessary!" });
         }
     }
 
@@ -81,6 +93,12 @@ export default function Register() {
                     onChange={e => setUser({ ...user, userName: e.target.value })}
                     required
                 />
+                {
+                    errorMessages.user ?
+                        <InputError message={errorMessages.user} className='mt-2 text-red-500' />
+                        :
+                        null
+                }
 
             </div>
 
@@ -96,6 +114,13 @@ export default function Register() {
                     onChange={e => setUser({ ...user, email: e.target.value })}
                     required
                 />
+
+                {
+                    errorMessages.email ?
+                        <InputError message={errorMessages.email} className='mt-2 text-red-500' />
+                        :
+                        null
+                }
 
             </div>
 
@@ -127,10 +152,16 @@ export default function Register() {
                     required
                 />
 
+                {
+                    errorMessages.password ?
+                        <InputError message={errorMessages.password} className='mt-2 text-red-500' />
+                        :
+                        null
+                }
             </div>
 
             <div className="mt-4">
-                <InputError message={message} className={status === 201 ? 'text-emerald-500' : 'text-red-500'} />
+                <InputError message={errorMessages.success} className='text-emerald-500' />
             </div>
 
             <div className="flex items-center justify-end mt-4">

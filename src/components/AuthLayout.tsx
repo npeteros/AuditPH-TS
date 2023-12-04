@@ -77,7 +77,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                                     <Dropdown.Content>
                                         <Dropdown.Link
                                             className=''
-                                            href="/profile.edit"
+                                            href="/profile"
                                         >Profile</Dropdown.Link>
                                         <form
                                             action={SignOut}
@@ -139,15 +139,15 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
                     <div className="pt-4 pb-1 border-t border-gray-200">
                         <div className="px-4">
-                            <div className="font-medium text-base dark:text-white dark:hover:text-white-600 text-neutral-600">{session?.user?.name}</div>
+                            <div className="font-medium text-base dark:text-white dark:hover:text-white text-neutral-600">{session?.user?.name}</div>
                             <div className="font-medium text-sm text-gray-400">{session?.user?.email}</div>
                         </div>
 
                         <div className="mt-3 space-y-1">
                             <ResponsiveNavLink
                                 active={false}
-                                href="/profile.edit"
-                                className='text-neutral-600'
+                                href="/profile"
+                                className='text-neutral-600 dark:text-white'
                             >Profile</ResponsiveNavLink>
                             <form
                                 action={SignOut}
@@ -156,7 +156,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                                 <button className='w-full'>
                                     <ResponsiveNavText
                                         active={false}
-                                        className='text-neutral-600'
+                                        className='text-neutral-600 dark:text-white'
                                     >
                                         Log Out
                                     </ResponsiveNavText>

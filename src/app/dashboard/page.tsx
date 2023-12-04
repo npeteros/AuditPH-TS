@@ -7,12 +7,13 @@ import { redirect } from "next/navigation";
 
 export default async function Page() {
     const session = await auth();
+    if(!session) return redirect('/login');
     const user = await prisma.user.findUnique({
         where: {
             email: session?.user?.email ?? undefined
         },
     });
-    if(!user || !session) return redirect('/login');
+    if(!user) return redirect('/login');
 
     return (
         <Provider session={session}>
@@ -22,8 +23,7 @@ export default async function Page() {
 
                         <div className="flex flex-col justify-center items-center mx-6">
 
-                            <DivLink
-                                route="/"
+                            <div
                                 className="bg-neutral-50 dark:bg-neutral-700 shadow-lg sm:rounded-lg rounded-3xl w-full px-16 mx-3 my-12 py-5"
                             >
                                 <div className="text-neutral-600 dark:text-neutral-200 flex items-center">
@@ -38,10 +38,9 @@ export default async function Page() {
                                         <span className='text-xl font-bold'>&#8369;&nbsp;{user?.income.toLocaleString()}</span>
                                     </span>
                                 </div>
-                            </DivLink>
+                            </div>
 
-                            <DivLink
-                                route="/"
+                            <div
                                 className="bg-neutral-50 dark:bg-neutral-700 shadow-lg sm:rounded-lg rounded-3xl w-full px-16 mx-3 py-5"
                             >
                                 <div className="text-neutral-600 dark:text-neutral-200 flex items-center">
@@ -56,7 +55,7 @@ export default async function Page() {
                                         <span className='text-xl font-bold'>&#8369;&nbsp;{user?.expenses.toLocaleString()}</span>
                                     </span>
                                 </div>
-                            </DivLink>
+                            </div>
                         </div>
 
                         <div className="bg-neutral-50 dark:bg-neutral-700 overflow-hidden shadow-md sm:rounded-lg rounded-3xl mt-12 w-full pb-6">

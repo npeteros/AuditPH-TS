@@ -43,7 +43,12 @@ export default async function Page() {
                 <p className='mt-6 dark:text-white text-neutral-800 text-4xl lg:text-6xl md:text-7xl leading-snug'>Manage your finances easily</p>
 
                 <div className="sm:mt-12 mt-6">
-                    <Link href="/dashboard">
+                    <Link href={
+                        session?.user ?
+                            "/dashboard"
+                            :
+                            "/login"
+                    }>
                         <button className="dark:bg-white bg-neutral-200 py-2 px-10 md:py-6 md:px-16 lg:py-3 lg:px-12 rounded-full">
                             <p className="text-center text-2xl md:text-5xl lg:text-2xl tracking-wider text-neutral-900 dark:text-black">Get Started</p>
                         </button>
