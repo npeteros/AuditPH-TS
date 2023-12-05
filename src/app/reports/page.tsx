@@ -15,8 +15,8 @@ export default async function Page() {
             <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
                 <div className="w-full bg-white border-gray-300 focus:border-indigo-300 rounded-3xl shadow-sm my-6">
                     <div className="p-4 flex">
-                        <div className="bg-[#fdb462] w-fit rounded-full p-2 m-4">
-                            <svg width="46" height="46" fill="none" stroke="#001110" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <div className="bg-[#95d7a4] w-fit rounded-full p-2 m-4">
+                            <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M3 12h4l3 8 4-16 3 8h4"></path>
                             </svg>
                         </div>
@@ -29,7 +29,7 @@ export default async function Page() {
 
                 <div className="w-full bg-white border-gray-300 focus:border-indigo-300 rounded-3xl shadow-sm my-6">
                     <div className="p-4 flex">
-                        <div className="bg-[#fdb462] w-fit rounded-full p-2 m-4">
+                        <div className="bg-[#6d05ff] w-fit rounded-full p-2 m-4">
                             <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M19 9H9a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2Z"></path>
                                 <path d="M14 16a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
@@ -45,7 +45,7 @@ export default async function Page() {
 
                 <div className="w-full bg-white border-gray-300 focus:border-indigo-300 rounded-3xl shadow-sm my-6">
                     <div className="p-4 flex">
-                        <div className="bg-[#fdb462] w-fit rounded-full p-2 m-4">
+                        <div className="bg-[#ff00a8] w-fit rounded-full p-2 m-4">
                             <svg width="46" height="46" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
                                 <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"></path>
