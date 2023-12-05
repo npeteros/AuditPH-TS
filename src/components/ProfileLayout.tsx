@@ -26,7 +26,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
             // Set a custom CSS variable to the window height
             document.documentElement.style.setProperty('--window-height', `${clientHeight}px`);
         }
-    })
+    }, [])
 
     return (
         <div id='main' className="bg-white dark:bg-neutral-800 bg-[url('/cover.svg')] pb-12">
