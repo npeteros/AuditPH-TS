@@ -39,12 +39,15 @@ export const authConfig = {
                         return user;
                     }
                 }
+                // console.log('Invalid credentials');
+                // console.log("Invalid log in: ", credentials);
                 return null;
             },
         }),
     ],
     callbacks: {
         authorized(params) {
+            // console.log('hi!!!')
             return !!params.auth?.user;
         },
     },

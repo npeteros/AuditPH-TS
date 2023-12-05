@@ -10,6 +10,7 @@ async function checkUser(email: string): Promise<User | null> {
             email,
         },
     });
+    console.log(user);
     return user;
 }
 
@@ -34,6 +35,7 @@ async function regUser(userName: string, email: string, password: string) {
             })
             return true;
         } else {
+            console.log(parsedCredentials.error.errors)
             return parsedCredentials.error.errors;
         }
 

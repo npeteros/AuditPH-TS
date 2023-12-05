@@ -12,6 +12,7 @@ async function checkBudget(type: number, userId: string) {
                 budgetTypeId: type
             }
         })
+        console.log(budget)
         return budget;
     } catch (error) {
         throw new Error()

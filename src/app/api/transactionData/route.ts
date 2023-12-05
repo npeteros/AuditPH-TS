@@ -23,6 +23,8 @@ export async function GET(req: Request) {
 
     const fetchedBudgetTypes = getExistingBudgets?.Budget.map(item => item.budgetType)
 
+    console.log(fetchedBudgetTypes)
+
     const fetchedUserGoals = await prisma.user.findUnique({
         where: {
             email
