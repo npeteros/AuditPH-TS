@@ -8,7 +8,6 @@ export default async function TransactionsTable({ query }: { query: string }) {
     const session = await auth();
     if (!session) return redirect('/login');
     const transactions = await fetchFilteredTransactions(String(session?.user?.email), query);
-    console.log("Transactions: ",transactions)
     return (
         <div className="inline-block min-w-full align-middle mt-6">
             <div className="rounded-lg bg-neutral-700 p-2 md:pt-0">

@@ -45,7 +45,7 @@ export default function Page() {
                         setTimeout(() => {
                             setLoading(false)
                             router.push("/goals");
-                        }, 2000);
+                        }, 1000);
                     } else {
                         setLoading(false)
                     }

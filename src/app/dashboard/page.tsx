@@ -13,7 +13,6 @@ export default async function Page() {
             email: session?.user?.email ?? undefined
         },
     });
-    if(!user) return redirect('/login');
 
     return (
         <Provider session={session}>

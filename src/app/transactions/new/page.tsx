@@ -79,7 +79,7 @@ export default function Page() {
                         setTimeout(() => {
                             setLoading(false);
                             router.push("/transactions");
-                        }, 2000);
+                        }, 1000);
                     } else {
                         setLoading(false)
                     }

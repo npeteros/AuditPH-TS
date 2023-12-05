@@ -58,7 +58,7 @@ export default function Page() {
                         setTimeout(() => {
                             setLoading(false)
                             router.push("/budgets");
-                        }, 2000);
+                        }, 1000);
                     } else {
                         setLoading(false)
                     }

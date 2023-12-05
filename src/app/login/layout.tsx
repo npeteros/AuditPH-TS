@@ -1,7 +1,12 @@
 import AuditLogo from '@/components/AuditLogo';
+import { auth } from '@/lib/auth';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
+    const session = await auth();
+    if(session) return redirect('/dashboard');
+    
     return (
         <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-white dark:bg-neutral-800 bg-[url('/cover.svg')]">
             <Link href="/" className='w-3/4 md:w-1/2 lg:w-1/4 ml-20'>

@@ -60,7 +60,7 @@ export default function Register() {
                             setLoading(false)
                             setTimeout(() => {
                                 router.push("/login");
-                            }, 2000);
+                            }, 1000);
                         } else {
                             const userError = msg.message.find((item: { path: [string] }) => item.path && item.path.includes('userName'));
                             const passwordError = msg.message.find((item: { path: [string] }) => item.path && item.path.includes('password'));

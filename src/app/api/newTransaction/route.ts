@@ -8,17 +8,23 @@ async function postTransaction(userId: string, transactionName: string, budgetTy
     try {
         if (goalId) {
             if (budgetTypeId) {
-                const newTransaction = await prisma.transaction.create({
-                    data: {
-                        userId,
-                        transactionName,
-                        budgetTypeId,
-                        goalId,
-                        transactionAmount,
-                        transactionType
-                    }
-                })
-                return newTransaction;
+
+                const budgetCount = await prisma.budgetType.aggregate({
+                    _count: true
+                });
+                if (budgetTypeId >= 1 && budgetTypeId <= budgetCount._count) {
+                    const newTransaction = await prisma.transaction.create({
+                        data: {
+                            userId,
+                            transactionName,
+                            budgetTypeId,
+                            goalId,
+                            transactionAmount,
+                            transactionType
+                        }
+                    })
+                    return newTransaction;
+                }
             } else {
                 const newTransaction = await prisma.transaction.create({
                     data: {
@@ -32,17 +38,22 @@ async function postTransaction(userId: string, transactionName: string, budgetTy
                 return newTransaction;
             }
         } else {
-            if(budgetTypeId) {
-                const newTransaction = await prisma.transaction.create({
-                    data: {
-                        userId,
-                        transactionName,
-                        budgetTypeId,
-                        transactionAmount,
-                        transactionType
-                    }
-                })
-                return newTransaction;
+            if (budgetTypeId) {
+                const budgetCount = await prisma.budgetType.aggregate({
+                    _count: true
+                });
+                if (budgetTypeId >= 1 && budgetTypeId <= budgetCount._count) {
+                    const newTransaction = await prisma.transaction.create({
+                        data: {
+                            userId,
+                            transactionName,
+                            budgetTypeId,
+                            transactionAmount,
+                            transactionType
+                        }
+                    })
+                    return newTransaction;
+                }
             } else {
                 const newTransaction = await prisma.transaction.create({
                     data: {

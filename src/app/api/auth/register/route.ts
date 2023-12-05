@@ -19,7 +19,7 @@ async function regUser(userName: string, email: string, password: string) {
         const credentials = { userName, email, password }
         const parsedCredentials = z
             .object({
-                userName: z.string().min(6, { message: "Username must be 6 or more characters long!" }),
+                userName: z.string().min(1, { message: "Username must be 6 or more characters long!" }),
                 email: z.string().email({ message: "Invalid email address!" }),
                 password: z.string().min(6, { message: "Password must be 6 or more characters long!" })
             })
@@ -35,7 +35,7 @@ async function regUser(userName: string, email: string, password: string) {
             })
             return true;
         } else {
-            console.log(parsedCredentials.error.errors)
+            // console.log(parsedCredentials.error.errors)
             return parsedCredentials.error.errors;
         }
 
