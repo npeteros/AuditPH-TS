@@ -8,7 +8,7 @@ export default async function TransactionsTable({ query }: { query: string }) {
     const session = await auth();
     if (!session) return redirect('/login');
     const transactions = await fetchFilteredTransactions(String(session?.user?.email), query);
-    console.log(transactions)
+    console.log("Transactions: ",transactions)
     return (
         <div className="inline-block min-w-full align-middle mt-6">
             <div className="rounded-lg bg-neutral-700 p-2 md:pt-0">
@@ -28,7 +28,7 @@ export default async function TransactionsTable({ query }: { query: string }) {
                                             <p className="text-sm text-gray-500">{t.transactionName}</p>
                                         </div>
                                     </div>
-                                    {t.budgetType?.typeName ? t.budgetType?.typeName : 'N/A'}
+                                    {t.typename ? t.typename : 'N/A'}
                                 </div>
                                 <div className="flex w-full items-center justify-between pt-4">
                                     <div>
@@ -99,7 +99,7 @@ export default async function TransactionsTable({ query }: { query: string }) {
                                         <p>{dayjs(t.createdAt.toISOString()).format('DD/MM/YYYY')}</p>
                                     </td>
                                     <td className="px-3 py-3">
-                                        <span className="font-medium">{t.budgetType?.typeName ? t.budgetType?.typeName : 'N/A'}</span>
+                                        <span className="font-medium">{t.typename ? t.typename : 'N/A'}</span>
                                     </td>
                                     <td className="px-3 py-3">
                                         <span>{t.transactionName}</span>
