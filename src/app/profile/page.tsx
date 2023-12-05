@@ -27,9 +27,9 @@ export default function Page() {
 
 
             <div className="bg-white max-w-6xl mx-auto py-2 m-14 rounded-xl">
-                <div className="m-5 pb-10">
-                    <p className="text-xl text-gray-900">Update Password</p>
-                    <p className="text-medium text-gray-600">Ensure your account is using a long random password to stay secure.</p>
+                <div className="m-5 pb-1">
+                    <p className="text-lg text-gray-900 font-semibold">Update Password</p>
+                    <p className="text-sm text-gray-600">Ensure your account is using a long random password to stay secure.</p>
                 </div>
                 <div>
                     <div className="m-5">
