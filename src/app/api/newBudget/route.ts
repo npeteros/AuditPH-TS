@@ -4,13 +4,15 @@ import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-async function checkBudget(type: number): Promise<Budget | null> {
+async function checkBudget(type: number, userId: string) {
     try {
         const budget = await prisma.budget.findFirst({
             where: {
+                userId,
                 budgetTypeId: type
             }
-        });
+        })
+        console.log(budget)
         return budget;
     } catch (error) {
         throw new Error()
@@ -53,13 +55,15 @@ export async function POST(req: Request) {
     });
     
     const { budgetType, budgetTotal } = await req.json();
-    const exists = await checkBudget(budgetType);
-    if (exists) {
-        return NextResponse.json({ message: "Budget already exists" }, { status: 400 });
-    } else {
-        if(user) {
-            await postBudget(user.id, budgetType, Number(budgetTotal));
-            return NextResponse.json({ message: "Budget successfully created" }, { status: 201 });
+    if(user) {
+        const exists = await checkBudget(budgetType, user.id);
+        if (exists) {
+            return NextResponse.json({ message: "Budget already exists" }, { status: 400 });
+        } else {
+            if(user) {
+                await postBudget(user.id, budgetType, Number(budgetTotal));
+                return NextResponse.json({ message: "Budget successfully created" }, { status: 201 });
+            }
         }
     }
 }
