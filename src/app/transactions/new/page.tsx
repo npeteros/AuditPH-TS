@@ -99,7 +99,7 @@ export default function Page() {
                     <div className="text-lg font-bold text-center text-gray-900 dark:text-white mb-4">Create a Transaction</div>
 
                     <div className="mx-6">
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-0">
+                        <div className="md:grid md:grid-cols-2 md:gap-x-4 md:gap-y-0">
                             <div>
                                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set transaction name <span className="dark:text-red-500 font-normal">*</span></label>
                                 <input
