@@ -19,7 +19,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     if(!session) return redirect('/login');
 
     return (
-        <div className="min-h-screen bg-white dark:bg-neutral-800 bg-repeat bg-scroll bg-[url('/cover.svg')]">
+        <div className="min-h-screen bg-white dark:bg-neutral-800 bg-[url('/cover.svg')]">
             <nav className="border-b border-gray-100 bg-white dark:bg-neutral-800">
                 <div className="max-w-sm md:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
