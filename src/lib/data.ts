@@ -93,7 +93,8 @@ export async function fetchFilteredTransactions(email: string, query: string) {
         ("createdAt"::TEXT ILIKE ${`%${query}%`} OR
         "transactionName" ILIKE ${`%${query}%`} OR
         "transactionType"::TEXT ILIKE ${`%${query}%`} OR
-        "transactionAmount"::TEXT ILIKE ${`%${query}%`})
+        "transactionAmount"::TEXT ILIKE ${`%${query}%`} OR
+        "typeName" ILIKE ${`%${query}%`})
         AND "userId" = (SELECT "id" FROM "User" WHERE "email" = ${email})
         );
     `;
