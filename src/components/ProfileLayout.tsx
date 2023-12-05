@@ -16,7 +16,6 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const pathName = usePathname();
     const { data: session } = useSession();
-    if (!session) return redirect('/login');
 
     useEffect(() => {
         const mainElement = document.getElementById('main');
@@ -27,6 +26,8 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
             document.documentElement.style.setProperty('--window-height', `${clientHeight}px`);
         }
     }, [])
+    
+    if (!session) return redirect('/login');
 
     return (
         <div id='main' className="bg-white dark:bg-neutral-800 bg-[url('/cover.svg')] pb-12">
