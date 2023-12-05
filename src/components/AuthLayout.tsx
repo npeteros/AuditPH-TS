@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import AuditLogo from '@/components/AuditLogo';
@@ -16,10 +16,20 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const pathName = usePathname();
     const { data: session } = useSession();
-    if(!session) return redirect('/login');
+    if (!session) return redirect('/login');
+
+    useEffect(() => {
+        const mainElement = document.getElementById('main');
+        if (mainElement) {
+            const clientHeight = mainElement.clientHeight;
+
+            // Set a custom CSS variable to the window height
+            document.documentElement.style.setProperty('--window-height', `${clientHeight}px`);
+        }
+    })
 
     return (
-        <div className="min-h-screen bg-white dark:bg-neutral-800 bg-[url('/cover.svg')]">
+        <div id='main' className="bg-white dark:bg-neutral-800 bg-[url('/cover.svg')] pb-12">
             <nav className="border-b border-gray-100 bg-white dark:bg-neutral-800">
                 <div className="max-w-sm md:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
