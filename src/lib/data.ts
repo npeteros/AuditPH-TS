@@ -1,5 +1,7 @@
+import { sql } from '@vercel/postgres';
 import prisma from './prisma';
 import { unstable_noStore as noStore } from 'next/cache';
+import { BudgetType } from '@prisma/client';
 
 export async function fetchBudgets(email: string) {
     // Add noStore() here prevent the response from being cached.
@@ -11,13 +13,13 @@ export async function fetchBudgets(email: string) {
             where: {
                 email
             },
-            include: { 
+            include: {
                 Budget: {
                     include: {
                         budgetType: true
                     }
                 }
-             }
+            }
         })
         return client?.Budget;
     } catch (error) {
@@ -62,6 +64,38 @@ export async function fetchTransactions(email: string) {
             }
         })
         return client?.Transaction;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch revenue data.');
+    }
+}
+
+type LedgerTable = {
+    id: string,
+    createdAt: Date,
+    transactionName: string,
+    budgetType: BudgetType,
+    transactionAmount: number
+    transactionType: 'INCOME' | 'EXPENSE'
+}
+
+export async function fetchFilteredTransactions(email: string, query: string) {
+    noStore();
+
+    try {
+        const filteredTransactions = await sql<LedgerTable>`
+        SELECT *
+        FROM "Transaction"
+        WHERE 
+            ("createdAt"::TEXT ILIKE ${`%${query}%`} OR
+            "transactionName" ILIKE ${`%${query}%`} OR
+            "transactionType"::TEXT ILIKE ${`%${query}%`} OR
+            "transactionAmount"::TEXT ILIKE ${`%${query}%`} OR
+            "budgetTypeId" IN (SELECT "id" FROM "BudgetType" WHERE "typeName" ILIKE ${`%${query}%`}))
+            AND "userId" = (SELECT "id" FROM "User" WHERE "email" = ${email});
+    `;
+
+        return filteredTransactions.rows;
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch revenue data.');

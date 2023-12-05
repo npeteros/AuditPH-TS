@@ -8,7 +8,7 @@ export default function TransactionComp({ transaction, budgetType }: { transacti
     return (
         <div className="my-3 bg-white shadow-sm rounded-3xl p-6">
             <div className="flex">
-                <div className="rounded-full w-fit p-3 mr-3" style={{ backgroundColor: budgetType ? budgetType.color : '#CCCCCC' }}>
+                <div className="rounded-full w-fit p-3 mr-3" style={{ backgroundColor: budgetType ? budgetType.color : '#666666' }}>
                     <DynamicComponentRenderer componentName={budgetType ? budgetType.typeName : 'Undefined'} />
                 </div>
                 <div className="flex flex-col w-full">
