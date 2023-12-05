@@ -61,15 +61,9 @@ export default function Page() {
                     </div>
                 </div>
                 <button className="bg-gray-900 m-5 rounded-md px-4 py-2 text-white ">
-                    SAVE
+                    UPDATE
                 </button>
             </div>
-
-
-
-
-
-
         </>
     );
 }
