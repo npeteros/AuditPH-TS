@@ -22,7 +22,7 @@ export default async function TransactionsTable({ query }: { query: string }) {
                                 <div className="flex items-center justify-between border-b pb-4">
                                     <div>
                                         <div className="mb-2 flex items-center">
-                                            <p>{dayjs(t.createdAt.toISOString()).format('DD/MM/YYYY')}</p>
+                                            <p>{dayjs(t.createdAt.toISOString()).format('YYYY-MM-DD')}</p>
                                         </div>
                                         <div className="w-36">
                                             <p className="text-sm text-gray-500">{t.transactionName}</p>
@@ -96,7 +96,7 @@ export default async function TransactionsTable({ query }: { query: string }) {
                                     className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                                 >
                                     <td className="py-3 pl-6 pr-3">
-                                        <p>{dayjs(t.createdAt.toISOString()).format('DD/MM/YYYY')}</p>
+                                        <p>{dayjs(t.createdAt.toISOString()).format('YYYY-MM-DD')}</p>
                                     </td>
                                     <td className="px-3 py-3">
                                         <span className="font-medium">{t.typename ? t.typename : 'N/A'}</span>
