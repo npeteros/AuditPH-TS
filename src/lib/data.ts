@@ -1,7 +1,6 @@
 import { sql } from '@vercel/postgres';
 import prisma from './prisma';
 import { unstable_noStore as noStore } from 'next/cache';
-import { BudgetType } from '@prisma/client';
 
 export async function fetchBudgets(email: string) {
     // Add noStore() here prevent the response from being cached.
@@ -72,11 +71,14 @@ export async function fetchTransactions(email: string) {
 
 type LedgerTable = {
     id: string,
+    userId: string,
+    budgetTypeId: number | null,
+    goalId: string,
+    transactionAmount: number,
     createdAt: Date,
     transactionName: string,
-    budgetType: BudgetType,
-    transactionAmount: number
-    transactionType: 'INCOME' | 'EXPENSE'
+    transactionType: 'INCOME' | 'EXPENSE',
+    typename: string | null
 }
 
 export async function fetchFilteredTransactions(email: string, query: string) {
@@ -84,17 +86,17 @@ export async function fetchFilteredTransactions(email: string, query: string) {
 
     try {
         const filteredTransactions = await sql<LedgerTable>`
-        SELECT *
-        FROM "Transaction"
-        WHERE 
-            ("createdAt"::TEXT ILIKE ${`%${query}%`} OR
-            "transactionName" ILIKE ${`%${query}%`} OR
-            "transactionType"::TEXT ILIKE ${`%${query}%`} OR
-            "transactionAmount"::TEXT ILIKE ${`%${query}%`} OR
-            "budgetTypeId" IN (SELECT "id" FROM "BudgetType" WHERE "typeName" ILIKE ${`%${query}%`}))
-            AND "userId" = (SELECT "id" FROM "User" WHERE "email" = ${email});
+        SELECT t.*, COALESCE(bt."typeName", null) AS typeName
+        FROM "Transaction" t
+        LEFT JOIN "BudgetType" bt ON t."budgetTypeId" = bt."id"
+        WHERE (
+        ("createdAt"::TEXT ILIKE ${`%${query}%`} OR
+        "transactionName" ILIKE ${`%${query}%`} OR
+        "transactionType"::TEXT ILIKE ${`%${query}%`} OR
+        "transactionAmount"::TEXT ILIKE ${`%${query}%`})
+        AND "userId" = (SELECT "id" FROM "User" WHERE "email" = ${email})
+        );
     `;
-
         return filteredTransactions.rows;
     } catch (error) {
         console.error('Database Error:', error);
