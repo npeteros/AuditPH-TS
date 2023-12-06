@@ -36,54 +36,32 @@ export default async function TransactionsTable({ query }: { query: string }) {
                                         </p>
                                         <p className={t.transactionType === 'EXPENSE' ? 'text-red-500' : 'text-emerald-500'}>{t.transactionType}</p>
                                     </div>
-                                    <div className="flex justify-end gap-2">
-                                        <DivLink
-                                            route="/"
-                                            className="rounded-md border p-2 hover:bg-gray-100"
-                                        >
-                                            <svg width="29" height="29" fill="none" stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M4 20h4L18.5 9.5a2.829 2.829 0 0 0-4-4L4 16v4Z"></path>
-                                                <path d="m13.5 6.5 4 4"></path>
-                                            </svg>
-                                        </DivLink>
-                                        <DivLink
-                                            route="/"
-                                            className="rounded-md border p-2 hover:bg-gray-100"
-                                        >
-                                            <svg width="29" height="29" fill="none" stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M4 7h16"></path>
-                                                <path d="M10 11v6"></path>
-                                                <path d="M14 11v6"></path>
-                                                <path d="m5 7 1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"></path>
-                                                <path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"></path>
-                                            </svg>
-                                        </DivLink>
-                                    </div>
                                 </div>
                             </div>
                         ))
                     }
                 </div>
-                <table className="hidden md:table min-w-full text-white">
+                <table className="pb-6 w-full text-white">
                     <thead className="rounded-lg text-left text-sm font-normal">
                         <tr>
-                            <th className="px-4 py-5 font-medium sm:pl-6">
+                            <th className="px-3 py-5 font-medium">
                                 Date
                             </th>
+
                             <th className="px-3 py-5 font-medium">
                                 Budget
                             </th>
+
                             <th className="px-3 py-5 font-medium">
                                 Description
                             </th>
+
                             <th className="px-3 py-5 font-medium">
-                                Type
+                                Type (Income/Expenses)
                             </th>
+
                             <th className="px-3 py-5 font-medium">
                                 Amount
-                            </th>
-                            <th className="px-3 py-5 font-medium flex justify-center">
-                                <span className="sr-only">Edit</span>
                             </th>
                         </tr>
                     </thead>
@@ -108,31 +86,6 @@ export default async function TransactionsTable({ query }: { query: string }) {
                                     </td>
                                     <td className="px-3 py-3">
                                         &#8369; {t.transactionAmount.toLocaleString()}
-                                    </td>
-                                    <td className="py-3 px-3">
-                                        <div className="flex justify-center gap-3">
-                                            <DivLink
-                                                route="/"
-                                                className="rounded-md border p-2 hover:bg-gray-100"
-                                            >
-                                                <svg width="29" height="29" fill="none" stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M4 20h4L18.5 9.5a2.829 2.829 0 0 0-4-4L4 16v4Z"></path>
-                                                    <path d="m13.5 6.5 4 4"></path>
-                                                </svg>
-                                            </DivLink>
-                                            <DivLink
-                                                route="/"
-                                                className="rounded-md border p-2 hover:bg-gray-100"
-                                            >
-                                                <svg width="29" height="29" fill="none" stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M4 7h16"></path>
-                                                    <path d="M10 11v6"></path>
-                                                    <path d="M14 11v6"></path>
-                                                    <path d="m5 7 1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"></path>
-                                                    <path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"></path>
-                                                </svg>
-                                            </DivLink>
-                                        </div>
                                     </td>
                                 </tr>
                             ))
