@@ -43,6 +43,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                                 <NavLink href='/transactions' active={pathName ? pathName.includes("/transactions") : false} className='dark:text-slate-100'>
                                     Transactions
                                 </NavLink>
+                                <NavLink href='/reports' active={pathName ? pathName.includes("/reports") : false} className='dark:text-slate-100'>
+                                    Reports
+                                </NavLink>
                             </div>
                         </div>
 
@@ -134,6 +137,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href='/transactions' active={pathName ? pathName.includes("/transactions") : false} className=' dark:text-slate-100'>
                             Transactions
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href='/reports' active={pathName ? pathName.includes("/reports") : false} className=' dark:text-slate-100'>
+                            Reports
                         </ResponsiveNavLink>
                     </div>
 
