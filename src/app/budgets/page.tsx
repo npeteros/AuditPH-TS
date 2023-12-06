@@ -38,7 +38,13 @@ export default async function Page() {
                     <span className="font-semibold text-xl text-black dark:text-white">My budget</span>
                     <div className="mt-3">
                         {budgets?.map(budget =>
-                            <BudgetComp key={budget.id} budget={budget} budgetType={budget.budgetType} />
+                            <DivLink
+                                key={budget.id}
+                                route={`budgets/edit/${budget.id}`}
+                                className=""
+                            >
+                                <BudgetComp budget={budget} budgetType={budget.budgetType} />
+                            </DivLink>
                         )}
                     </div>
 

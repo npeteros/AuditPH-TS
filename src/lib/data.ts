@@ -101,6 +101,22 @@ export async function fetchFilteredTransactions(email: string, query: string) {
         return filteredTransactions.rows;
     } catch (error) {
         console.error('Database Error:', error);
-        throw new Error('Failed to fetch revenue data.');
+        throw new Error('Failed to fetch transactions data.');
+    }
+}
+
+export async function fetchBudgetById(id: string) {
+    noStore();
+
+    try {
+        const budget = await prisma.budget.findUnique({
+            where: {
+                id
+            }
+        });
+        return budget;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch budget data.');
     }
 }
