@@ -12,7 +12,7 @@ export default async function Page() {
 
     return (
         <>
-            <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+            <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-6">
                 <div className="w-full bg-white border-gray-300 focus:border-indigo-300 rounded-3xl shadow-sm my-6">
                     <div className="p-4 flex">
                         <div className="bg-[#95d7a4] w-fit rounded-full p-2 m-4">
@@ -21,8 +21,8 @@ export default async function Page() {
                             </svg>
                         </div>
                         <div className="flex flex-col justify-center">
-                            <div className="font-bold text-2xl ">Budget Insights</div>
-                            <div className="text-lg">Hello</div>
+                            <div className="font-bold text-lg ">Budget Insights</div>
+                            <div className="text-m">Hello</div>
                         </div>
                     </div>
                 </div>
@@ -37,8 +37,8 @@ export default async function Page() {
                             </svg>
                         </div>
                         <div className="flex flex-col justify-center">
-                            <div className="font-bold text-2xl">Budget Category</div>
-                            <div className="text-lg">Hi</div>
+                            <div className="font-bold text-lg">Budget Category</div>
+                            <div className="text-m">Hi</div>
                         </div>
                     </div>
                 </div>
@@ -54,8 +54,8 @@ export default async function Page() {
                             </svg>
                         </div>
                         <div className="flex flex-col justify-center">
-                            <div className="font-bold text-2xl">My Networth</div>
-                            <div className="text-lg">See your progression overtime</div>
+                            <div className="font-bold text-lg">My Networth</div>
+                            <div className="text-m">See your progression overtime</div>
                         </div>
                     </div>
                 </div>
