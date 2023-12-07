@@ -87,7 +87,7 @@ export default function Register() {
                 <TextInput
                     id="name"
                     name="name"
-                    className="mt-1 block w-full text-sm"
+                    className={errorMessages.user ? "outline outline-2 rounded-sm outline-red-500 mt-1 block w-full text-sm" : "mt-1 block w-full text-sm"}
                     isFocused={true}
                     placeholder='Enter your username'
                     onChange={e => setUser({ ...user, userName: e.target.value })}
@@ -109,7 +109,7 @@ export default function Register() {
                     id="email"
                     type="email"
                     name="email"
-                    className="mt-1 block w-full text-sm"
+                    className={errorMessages.email ? "outline outline-2 rounded-sm outline-red-500 mt-1 block w-full text-sm" : "mt-1 block w-full text-sm"}
                     placeholder='Enter your email address'
                     onChange={e => setUser({ ...user, email: e.target.value })}
                     required
@@ -131,7 +131,7 @@ export default function Register() {
                     id="password"
                     type="password"
                     name="password"
-                    className="mt-1 block w-full text-sm"
+                    className={errorMessages.password ? "outline outline-2 rounded-sm outline-red-500 mt-1 block w-full text-sm" : "mt-1 block w-full text-sm"}
                     placeholder='Enter your password'
                     onChange={e => setUser({ ...user, password: e.target.value })}
                     required
@@ -146,7 +146,7 @@ export default function Register() {
                     id="password_confirmation"
                     type="password"
                     name="password_confirmation"
-                    className="mt-1 block w-full text-sm"
+                    className={errorMessages.password ? "outline outline-2 rounded-sm outline-red-500 mt-1 block w-full text-sm" : "mt-1 block w-full text-sm"}
                     placeholder='Re-enter your password'
                     onChange={e => setUser({ ...user, confirmPass: e.target.value })}
                     required

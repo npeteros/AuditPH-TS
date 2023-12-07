@@ -1,6 +1,4 @@
 import { fetchTransactionSumByBudgetType } from "@/lib/data";
-import { BudgetType } from "@/lib/definitions";
-import prisma from "@/lib/prisma"
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {

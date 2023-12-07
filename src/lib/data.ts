@@ -121,6 +121,86 @@ export async function fetchBudgetById(id: string) {
     }
 }
 
+export async function fetchGoalById(id: string) {
+    noStore();
+
+    try {
+        const goal = await prisma.goal.findUnique({
+            where: {
+                id
+            }
+        });
+        return goal;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch goal data.');
+    }
+}
+
+export async function fetchTransactionById(id: string) {
+    noStore();
+
+    try {
+        const client = await prisma.transaction.findUnique({
+            where: {
+                id
+            }
+        })
+        return client;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch transaction data.');
+    }
+}
+
+export async function deleteBudgetById(id: string) {
+    noStore();
+
+    try {
+        const budget = await prisma.budget.delete({
+            where: {
+                id
+            }
+        });
+        return budget;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to delete budget data.');
+    }
+}
+
+export async function deleteGoalById(id: string) {
+    noStore();
+
+    try {
+        const goal = await prisma.goal.delete({
+            where: {
+                id
+            }
+        });
+        return goal;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to delete goal data.');
+    }
+}
+
+export async function deleteTransactionById(id: string) {
+    noStore();
+
+    try {
+        const transaction = await prisma.transaction.delete({
+            where: {
+                id
+            }
+        });
+        return transaction;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to delete transaction data.');
+    }
+}
+
 export interface TransactionSumByBudgetType {
     budgetType: string;
     sum: number;

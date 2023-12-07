@@ -40,7 +40,7 @@ export default function Page() {
         if (newBudget) {
             try {
                 setLoading(true);
-                fetch('/api/newBudget', {
+                fetch('/api/budgets/newBudget', {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

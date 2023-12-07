@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 export default async function Page() {
 
     const session = await auth();
-    if(!session) redirect('/login');
+    if (!session) redirect('/login');
     const transactions = await fetchTransactions(String(session?.user?.email));
 
     return (
@@ -34,10 +34,19 @@ export default async function Page() {
             <div className="my-12">
                 <span className="font-semibold text-xl text-black dark:text-white">My transactions</span>
                 {transactions?.map(transaction =>
-                    transaction.budgetType ?
-                        <TransactionComp key={transaction.id} transaction={transaction} budgetType={transaction.budgetType} />
-                    :
-                        <TransactionComp key={transaction.id} transaction={transaction} budgetType={undefined} />
+
+                    <DivLink
+                        key={transaction.id}
+                        route={`transactions/edit/${transaction.id}`}
+                        className=""
+                    >
+                        {
+                            transaction.budgetType ?
+                                <TransactionComp key={transaction.id} transaction={transaction} budgetType={transaction.budgetType} />
+                                :
+                                <TransactionComp key={transaction.id} transaction={transaction} budgetType={undefined} />
+                        }
+                    </DivLink>
                 )}
             </div>
         </div>

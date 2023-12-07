@@ -19,16 +19,23 @@ export default function BudgetComp({ budget, budgetType }: { budget: Budget, bud
                             </span>
                         </div>
                         <span className="max-w-xs text-sm font-medium text-black">
-                            &#8369; {Number(budget.budgetCurrent).toLocaleString()} / {Number(budget.budgetTotal).toLocaleString()}
+                            &#8369; {
+                                budget.budgetCurrent >= budget.budgetTotal ? 
+                                    Number(budget.budgetTotal).toLocaleString()
+                                : 
+                                    Number(budget.budgetCurrent).toLocaleString()} / {Number(budget.budgetTotal).toLocaleString()
+                            }
                         </span>
                     </div>
                     <div className="flex justify-between items-center w-full">
                         <div className="w-4/5 bg-gray-200 rounded-full h-2.5 dark:bg-gray-200">
-                            <div className="bg-blue-400 h-2.5 rounded-full" style={{ width: `${(budget.budgetCurrent / budget.budgetTotal) * 100}%` }} />
+                            <div className="bg-blue-400 h-2.5 rounded-full max-w-full" style={{ width: `${((budget.budgetCurrent / budget.budgetTotal) * 100)}%` }} />
                         </div>
                         <span className="text-sm font-medium text-black">
                             {
-                                parseFloat(String((budget.budgetCurrent / budget.budgetTotal) * 100)).toFixed()
+                                ((budget.budgetCurrent / budget.budgetTotal) * 100) > 100
+                                ? 100
+                                : parseFloat(String((budget.budgetCurrent / budget.budgetTotal) * 100)).toFixed()
                             } % 
                         </span>
                     </div>

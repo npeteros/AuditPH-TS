@@ -7,7 +7,7 @@ import { fetchGoals } from "@/lib/data";
 export default async function Page() {
 
     const session = await auth();
-    if(!session) redirect('/login');
+    if (!session) redirect('/login');
     const goals = await fetchGoals(String(session?.user?.email))
 
     return (
@@ -35,8 +35,14 @@ export default async function Page() {
                 <span className="font-semibold text-xl text-black dark:text-white">My goals</span>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                     {goals?.map(goal =>
+                        <DivLink
+                            key={goal.id}
+                            route={`goals/edit/${goal.id}`}
+                            className=""
+                        >
                             <GoalComp key={goal.id} goal={goal} />
-                        )}
+                        </DivLink>
+                    )}
                 </div>
             </div>
         </div>

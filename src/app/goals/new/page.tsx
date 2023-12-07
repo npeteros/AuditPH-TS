@@ -20,13 +20,22 @@ export default function Page() {
     const [status, setStatus] = useState(0);
     const router = useRouter();
 
+    const getCurrentDate = () => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+        const day = now.getDate().toString().padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    };
+
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (newGoal) {
             try {
                 setLoading(true);
-                fetch('/api/newGoal', {
+                fetch('/api/goals/newGoal', {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -81,8 +90,8 @@ export default function Page() {
                             type="date"
                             onChange={e => setNewGoal({ ...newGoal, goalDeadline: e.target.value })}
                             value={newGoal.goalDeadline}
-                            placeholder="Set the goal's total"
-                            min={1}
+                            placeholder="Set the goal's deadline"
+                            min={getCurrentDate()}
                             required
                         />
 

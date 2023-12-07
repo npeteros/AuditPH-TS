@@ -12,12 +12,14 @@ export default function Page({ params }: { params: { id: string } }) {
 
     const { data: session } = useSession();
     if (!session) redirect('/login');
+    const today = new Date();
+    today.setDate(today.getDate() + 2)
 
-    const [newBudget, setNewBudget] = useState({
-        budgetTypeId: 0,
-        budgetTotal: ''
+    const [newGoal, setNewGoal] = useState({
+        goalName: '',
+        goalTarget: '',
+        goalDeadline: today.toISOString().split('T')[0]
     })
-    const [budgetTypes, setBudgetTypes] = useState<BudgetType[]>([]);
     const [editLoading, setEditLoading] = useState(true);
     const [deleteLoading, setDeleteLoading] = useState(true);
     const [message, setMessage] = useState('');
@@ -27,20 +29,19 @@ export default function Page({ params }: { params: { id: string } }) {
     const userEmail = session?.user?.email;
     const encodedValue = encodeURIComponent(String(userEmail));
 
-    useEffect(() => {
-        async function fetchBudgetTypes() {
-            try {
-                fetch('/api/budgetTypes')
-                    .then(res => res.json())
-                    .then(data => setBudgetTypes(data))
-            } catch (error) {
-                console.error('Error fetching BudgetTypes:', error);
-            }
-        }
+    const getCurrentDate = () => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+        const day = now.getDate().toString().padStart(2, '0');
 
-        async function fetchEditingBudget() {
+        return `${year}-${month}-${day}`;
+    };
+
+    useEffect(() => {
+        async function fetchEditingGoal() {
             try {
-                fetch(`/api/budgets/getBudgetById?email=${encodedValue}&id=${params.id}`, {
+                fetch(`/api/goals/getGoalById?email=${encodedValue}&id=${params.id}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"
@@ -48,7 +49,9 @@ export default function Page({ params }: { params: { id: string } }) {
                 })
                     .then(res => res.json())
                     .then(data => {
-                        setNewBudget({ budgetTypeId: data.data.budgetTypeId, budgetTotal: String(data.data.budgetTotal) })
+                        const formattedDate = new Date(data.data.goalDeadline).toISOString().split('T')[0];
+                        console.log(formattedDate);
+                        setNewGoal({ goalName: data.data.goalName, goalTarget: String(data.data.goalTarget), goalDeadline: formattedDate })
                         setEditLoading(false);
                         setDeleteLoading(false);
                     })
@@ -57,23 +60,23 @@ export default function Page({ params }: { params: { id: string } }) {
             }
         }
 
-        fetchBudgetTypes();
-        fetchEditingBudget();
-        console.log(newBudget)
+        fetchEditingGoal();
+        console.log(newGoal)
     }, [])
 
-    const updateBudget = () => {
-        if (newBudget) {
+    const updateGoal = () => {
+        if (newGoal) {
             try {
                 setEditLoading(true);
-                fetch(`/api/budgets/editBudget?id=${params.id}`, {
+                fetch(`/api/goals/editGoal?id=${params.id}`, {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        budgetType: newBudget.budgetTypeId,
-                        budgetTotal: newBudget.budgetTotal
+                        goalName: newGoal.goalName,
+                        goalTarget: newGoal.goalTarget,
+                        goalDeadline: newGoal.goalDeadline
                     })
                 }).then(async (res) => {
                     const msg = await res.json();
@@ -83,23 +86,23 @@ export default function Page({ params }: { params: { id: string } }) {
                     if (res.status === 201) {
                         setTimeout(() => {
                             setEditLoading(false)
-                            router.push("/budgets");
+                            router.push("/goals");
                         }, 1000);
                     } else {
                         setEditLoading(false)
                     }
                 });
             } catch (error) {
-                console.log("Error during update of existing budget: ", error);
+                console.log("Error during update of existing goal: ", error);
             }
         }
     }
 
-    const deleteBudget = () => {
-        if (newBudget) {
+    const deleteGoal = () => {
+        if (newGoal) {
             try {
                 setDeleteLoading(true);
-                fetch(`/api/budgets/deleteBudget?id=${params.id}`, {
+                fetch(`/api/goals/deleteGoal?id=${params.id}`, {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json"
@@ -112,7 +115,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     if (res.status === 201) {
                         setTimeout(() => {
                             setDeleteLoading(false)
-                            router.push("/budgets");
+                            router.push("/goals");
                         }, 1000);
                     } else {
                         setDeleteLoading(false)
@@ -129,34 +132,41 @@ export default function Page({ params }: { params: { id: string } }) {
             <div>
                 <div className="bg-neutral-200 dark:bg-neutral-700 rounded-lg p-4">
 
-                    <div className="text-2xl font-bold text-center text-gray-900 dark:text-white my-4">Update Budget</div>
+                    <div className="text-lg font-bold text-center text-gray-900 dark:text-white mb-4">Update Goal</div>
 
                     <div className="mx-6">
-                        <label htmlFor="budget_type_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select a budget type</label>
-                        <select
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-6"
-                            value={newBudget.budgetTypeId}
-                            onChange={e => setNewBudget({ ...newBudget, budgetTypeId: Number(e.target.value) })}
-                        >
-                            <option value={0}>Choose a budget type</option>
-                            {
-                                budgetTypes.map((budgetType) =>
-                                (
-                                    <option key={budgetType.id} value={budgetType.id}>{budgetType?.typeName}</option>
-                                ))
-                            }
-                        </select>
+                        <label htmlFor="goal" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set your goal</label>
+                        <input
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
+                            type="text"
+                            onChange={e => setNewGoal({ ...newGoal, goalName: e.target.value })}
+                            value={newGoal.goalName}
+                            placeholder="Set the goal's name"
+                            required
+                        />
 
-                        <label htmlFor="budget_total" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set a budget</label>
+                        <label htmlFor="goal_deadline" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set a deadline</label>
+                        <input
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
+                            type="date"
+                            onChange={e => setNewGoal({ ...newGoal, goalDeadline: e.target.value })}
+                            value={newGoal.goalDeadline}
+                            placeholder="Set the goal's deadline"
+                            min={getCurrentDate()}
+                            required
+                        />
+
+                        <label htmlFor="goal_total" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set a target</label>
                         <div className="flex h-fit items-center">
                             <span className="font-bold text-gray-900 dark:text-white -ml-4 mr-2">&#8369;</span>
                             <input
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  w-full p-2.5 bg-theme-secondary-2 dark:bg-neutral-700 dark:border-gray-600 dark:placeholder-white placeholder-gray-900 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 type="number"
-                                onChange={e => setNewBudget({ ...newBudget, budgetTotal: e.target.value })}
-                                value={newBudget.budgetTotal || ''}
+                                onChange={e => setNewGoal({ ...newGoal, goalTarget: e.target.value })}
+                                value={newGoal.goalTarget || ''}
+                                placeholder="Set the goal's total"
                                 min={1}
-                                placeholder="Set the budget's total"
+                                required
                             />
                         </div>
 
@@ -168,7 +178,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             <PrimaryButton
                                 className="mt-8 mb-6 bg-neutral-600 dark:bg-neutral-800 hover:bg-neutral-800 w-5/6"
                                 disabled={editLoading || deleteLoading}
-                                onClick={updateBudget}
+                                onClick={updateGoal}
                             >
                                 {
                                     editLoading ? (
@@ -183,7 +193,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             <PrimaryButton
                                 className="mt-8 mb-6 bg-red-600 dark:bg-red-800 hover:bg-neutral-800 w-1/6"
                                 disabled={editLoading || deleteLoading}
-                                onClick={deleteBudget}
+                                onClick={deleteGoal}
                             >
                                 {
                                     deleteLoading ? (

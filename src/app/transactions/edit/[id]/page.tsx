@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function Page() {
+export default function Page({ params }: { params: { id: string } }) {
     const { data: session } = useSession();
     if (!session) redirect('/login');
 
@@ -23,7 +23,8 @@ export default function Page() {
     const [goals, setGoals] = useState<Goal[]>([]);
     const [status, setStatus] = useState(0);
     const [message, setMessage] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [editLoading, setEditLoading] = useState(true);
+    const [deleteLoading, setDeleteLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
@@ -47,17 +48,38 @@ export default function Page() {
             }
         }
 
+        async function fetchEditingTransaction() {
+            try {
+                fetch(`/api/transactions/getTransactionById?email=${encodedValue}&id=${params.id}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        setNewTransaction({
+                            transactionName: data.data.transactionName, transactionType: data.data.transactionType,
+                            budgetTypeId: data.data.budgetTypeId, goalId: data.data.goalId, transactionAmount: data.data.transactionAmount
+                        })
+                        setEditLoading(false);
+                        setDeleteLoading(false);
+                    })
+            } catch (error) {
+                console.error('Error fetching editing budget:', error);
+            }
+        }
+
         fetchBudgetTypes()
+        fetchEditingTransaction();
     }, [])
 
-    const submit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
+    const updateTransaction = () => {
         if (newTransaction) {
             try {
-                setLoading(true);
-                fetch('/api/transactions/newTransaction', {
-                    method: "POST",
+                setEditLoading(true);
+                fetch(`/api/transactions/editTransaction?id=${params.id}`, {
+                    method: "PATCH",
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -75,15 +97,44 @@ export default function Page() {
 
                     if (res.status === 201) {
                         setTimeout(() => {
-                            setLoading(false);
+                            setEditLoading(false)
                             router.push("/transactions");
                         }, 1000);
                     } else {
-                        setLoading(false)
+                        setEditLoading(false)
                     }
                 });
             } catch (error) {
-                console.log("Error during creation of new budget: ", error);
+                console.log("Error during update of existing transaction: ", error);
+            }
+        }
+    }
+
+    const deleteTransaction = () => {
+        if (newTransaction) {
+            try {
+                setDeleteLoading(true);
+                fetch(`/api/transactions/deleteTransaction?id=${params.id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(async (res) => {
+                    const msg = await res.json();
+                    setStatus(res.status);
+                    setMessage(msg.message);
+
+                    if (res.status === 201) {
+                        setTimeout(() => {
+                            setDeleteLoading(false)
+                            router.push("/transactions");
+                        }, 1000);
+                    } else {
+                        setDeleteLoading(false)
+                    }
+                });
+            } catch (error) {
+                console.log("Error during deletion of existing transaction: ", error);
             }
         }
     }
@@ -91,10 +142,10 @@ export default function Page() {
     return (
 
         <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-            <form onSubmit={submit}>
+            <div>
                 <div className="bg-neutral-200 dark:bg-neutral-700 rounded-lg p-4">
 
-                    <div className="text-lg font-bold text-center text-gray-900 dark:text-white mb-4">Create a Transaction</div>
+                    <div className="text-lg font-bold text-center text-gray-900 dark:text-white mb-4">Update Transaction</div>
 
                     <div className="mx-6">
                         <div className="md:grid md:grid-cols-2 md:gap-x-4 md:gap-y-0">
@@ -174,25 +225,52 @@ export default function Page() {
                             <div className="mt-4 col-span-2">
                                 <InputError message={message} className={status === 201 ? 'text-emerald-500' : 'text-red-500'} />
                             </div>
-
-                            <PrimaryButton
-                                disabled={loading}
-                                className="mt-8 mb-6 bg-neutral-600 dark:bg-neutral-800 hover:bg-neutral-800 w-full col-span-2"
-                            >
-                                {
-                                    loading ? (
-                                        <div className="m-auto">
-                                            <LoadingDots color="#808080" />
-                                        </div>
-                                    ) : (
-                                        <span className="mx-auto text-gray-900 text-white">Create Transaction</span>
-                                    )
-                                }
-                            </PrimaryButton>
+                            <div className="col-span-2">
+                                <div className="flex gap-4">
+                                    <PrimaryButton
+                                        className="mt-8 mb-6 bg-neutral-600 dark:bg-neutral-800 hover:bg-neutral-800 w-5/6"
+                                        disabled={editLoading || deleteLoading}
+                                        onClick={updateTransaction}
+                                    >
+                                        {
+                                            editLoading ? (
+                                                <div className="m-auto">
+                                                    <LoadingDots color="#808080" />
+                                                </div>
+                                            ) : (
+                                                <span className="mx-auto text-gray-900 text-white">Update Transaction</span>
+                                            )
+                                        }
+                                    </PrimaryButton>
+                                    <PrimaryButton
+                                        className="mt-8 mb-6 bg-red-600 dark:bg-red-800 hover:bg-neutral-800 w-1/6"
+                                        disabled={editLoading || deleteLoading}
+                                        onClick={deleteTransaction}
+                                    >
+                                        {
+                                            deleteLoading ? (
+                                                <div className="m-auto">
+                                                    <LoadingDots color="#808080" />
+                                                </div>
+                                            ) : (
+                                                <div className="mx-auto">
+                                                    <svg width="24" height="24" fill="none" stroke="#ffffff" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M4 7h16"></path>
+                                                        <path d="M10 11v6"></path>
+                                                        <path d="M14 11v6"></path>
+                                                        <path d="m5 7 1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"></path>
+                                                        <path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"></path>
+                                                    </svg>
+                                                </div>
+                                            )
+                                        }
+                                    </PrimaryButton>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
 
     );
