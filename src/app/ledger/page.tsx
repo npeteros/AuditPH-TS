@@ -1,6 +1,5 @@
 import Search from "@/components/Search";
 import TransactionsTable from "@/components/TransactionsTable";
-import { fetchFilteredTransactions } from "@/lib/data";
 
 export default async function Page({
     searchParams,

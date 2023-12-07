@@ -121,7 +121,7 @@ export async function fetchBudgetById(id: string) {
     }
 }
 
-interface TransactionSumByBudgetType {
+export interface TransactionSumByBudgetType {
     budgetType: string;
     sum: number;
 }

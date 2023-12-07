@@ -3,10 +3,10 @@
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
-import ChartComponent from './ChartComponent';
+import ChartComponent from "./ChartComponent";
 
 export default function Page() {
-    
+
     const { data: session } = useSession();
     if (!session) redirect('/login');
 
@@ -34,15 +34,18 @@ export default function Page() {
 
         insightsData()
     }, [])
-    
+
     return (
-        <div className='w-8/12 mx-auto'>
-            <div className='w-3/5 mx-auto'>
-                <p className='text-6xl text-center text-lime-100 font-semibold p-4'>TOTAL EXPENDITURES</p>
+        <>
+            <div className='w-8/12 mx-auto'>
+                <p className='text-4xl md:text-6xl text-center text-lime-100 font-semibold mt-12 mb-6'>TOTAL EXPENDITURES</p>
             </div>
-            <div className='bg-white rounded-lg p-4'>
-                <ChartComponent data={data} />
+            <div className='bg-neutral-700 rounded-lg p-4 w-full md:w-1/2 mx-auto'>
+                <div className="bg-white p-4 rounded-lg">
+                    <ChartComponent data={data} />
+                </div>
             </div>
-        </div>
+        </>
+
     );
 }
