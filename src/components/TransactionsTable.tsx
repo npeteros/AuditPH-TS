@@ -41,7 +41,7 @@ export default async function TransactionsTable({ query }: { query: string }) {
                         ))
                     }
                 </div>
-                <table className="pb-6 w-full text-white">
+                <table className="hidden md:table pb-6 w-full text-white">
                     <thead className="rounded-lg text-left text-sm font-normal">
                         <tr>
                             <th className="px-3 py-5 font-medium">
