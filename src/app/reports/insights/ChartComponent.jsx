@@ -4,11 +4,11 @@ import { Chart as ChartJS } from "chart.js/auto"
 
 const ChartComponent = ({ data }) => {
   const chartData = {
-    labels: data.map(item => item.budget),
+    labels: data.map(item => item.budgetType),
     datasets: [
       {
         label: 'Total Expenditures',
-        data: data.map(item => item.total),
+        data: data.map(item => item.sum),
         backgroundColor: '#ff3200',
       },
     ],

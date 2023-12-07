@@ -1,9 +1,9 @@
 "use client";
 
-import { fetchTransactionSumByBudgetType } from "@/lib/data"
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import ChartComponent from './ChartComponent';
 
 export default function Page() {
     
@@ -36,8 +36,13 @@ export default function Page() {
     }, [])
     
     return (
-        <div>
-            Hello world!
+        <div className='w-8/12 mx-auto'>
+            <div className='w-3/5 mx-auto'>
+                <p className='text-6xl text-center text-lime-100 font-semibold p-4'>TOTAL EXPENDITURES</p>
+            </div>
+            <div className='bg-white rounded-lg p-4'>
+                <ChartComponent data={data} />
+            </div>
         </div>
-    )
+    );
 }
