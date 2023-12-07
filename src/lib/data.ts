@@ -69,16 +69,16 @@ export async function fetchTransactions(email: string) {
     }
 }
 
-type LedgerTable = {
-    id: string,
-    userId: string,
-    budgetTypeId: number | null,
-    goalId: string,
-    transactionAmount: number,
-    createdAt: Date,
-    transactionName: string,
-    transactionType: 'INCOME' | 'EXPENSE',
-    typename: string | null
+interface LedgerTable {
+    id: string;
+    userId: string;
+    budgetTypeId: number | null;
+    goalId: string;
+    transactionAmount: number;
+    createdAt: Date;
+    transactionName: string;
+    transactionType: 'INCOME' | 'EXPENSE';
+    typename: string | null;
 }
 
 export async function fetchFilteredTransactions(email: string, query: string) {
@@ -118,5 +118,44 @@ export async function fetchBudgetById(id: string) {
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch budget data.');
+    }
+}
+
+interface TransactionSumByBudgetType {
+    budgetType: string;
+    sum: number;
+}
+
+export async function fetchTransactionSumByBudgetType(email: string) {
+    noStore();
+
+    try {
+        const budgetType = await prisma.budgetType.findMany({
+            include: {
+                Transaction: {
+                    where: {
+                        user: {
+                            email
+                        }
+                    },
+                    select: {
+                        transactionAmount: true
+                    }
+                }
+            }
+        })
+        const budgetTypeWithSum: TransactionSumByBudgetType[] = [];
+        budgetType.map(bt => {
+            let sum = 0;
+            bt.Transaction.map(t => {
+                sum += Number(t.transactionAmount);
+            })
+            const budgettype: TransactionSumByBudgetType = { budgetType: bt.typeName, sum: sum };
+            budgetTypeWithSum.push(budgettype);
+        })
+        return budgetTypeWithSum;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch transaction by budget type data.');
     }
 }
