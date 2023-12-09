@@ -20,12 +20,15 @@ async function checkBudget(type: number, userId: string) {
 
 async function checkGoal(goalId: string) {
     try {
-        const goal = await prisma.goal.findFirst({
-            where: {
-                id: goalId
-            }
-        })
-        return goal;
+        if (goalId != "null") {
+            const goal = await prisma.goal.findFirst({
+                where: {
+                    id: goalId
+                }
+            })
+
+            return goal;
+        }
     } catch (error) {
         throw new Error()
     }
@@ -48,19 +51,19 @@ export async function DELETE(req: Request) {
     if (data && user) {
         const budget = await checkBudget(Number(data.budgetTypeId), data.userId);
         const goal = await checkGoal(String(data.goalId));
-        if(budget) {
+        if (budget) {
             const updatedBudget = await prisma.budget.update({
                 where: {
                     id: budget.id
                 },
-                data: { 
+                data: {
                     budgetCurrent: {
                         decrement: data.transactionAmount
                     }
                 }
             })
         }
-        if(goal) {
+        if (goal) {
             const updatedGoal = await prisma.goal.update({
                 where: {
                     id: goal.id
