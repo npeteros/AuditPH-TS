@@ -20,7 +20,7 @@ export default async function Page({
                 <div className="max-w-6xl w-full my-4">
                     <Search placeholder="Search transasctions..." />
                     {
-                        query.length > 3 ? <TransactionsTable query={query} /> : <TransactionsTable query="" />
+                        // query.length > 3 ? <TransactionsTable query={query} /> : <TransactionsTable query="" />
                     }
                     
                 </div>
