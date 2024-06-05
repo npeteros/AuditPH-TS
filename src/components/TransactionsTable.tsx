@@ -27,7 +27,7 @@ export default async function TransactionsTable({ query }: { query: string }) {
                                             <p className="text-sm text-gray-500">{t.transactionName}</p>
                                         </div>
                                     </div>
-                                    {t.typename ? t.typename : 'N/A'}
+                                    {t.transactionType ? t.transactionType : 'N/A'}
                                 </div>
                                 <div className="flex w-full items-center justify-between pt-4">
                                     <div>
@@ -76,7 +76,7 @@ export default async function TransactionsTable({ query }: { query: string }) {
                                         <p>{dayjs(t.createdAt.toISOString()).format('YYYY-MM-DD')}</p>
                                     </td>
                                     <td className="px-3 py-3">
-                                        <span className="font-medium">{t.typename ? t.typename : 'N/A'}</span>
+                                        <span className="font-medium">{t.transactionType ? t.transactionType : 'N/A'}</span>
                                     </td>
                                     <td className="px-3 py-3">
                                         <span>{t.transactionName}</span>

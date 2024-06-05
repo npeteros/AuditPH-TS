@@ -18,9 +18,9 @@ export default async function Page({
                     <p className="text-2xl p-1 pb-2">MY LEDGER</p>
                 </div>
                 <div className="max-w-6xl w-full my-4">
-                    <Search placeholder="Search transasctions..." />
+                    <Search placeholder="Search transactions..." />
                     {
-                        // query.length > 3 ? <TransactionsTable query={query} /> : <TransactionsTable query="" />
+                        query.length > 3 ? <TransactionsTable query={query} /> : <TransactionsTable query="" />
                     }
                     
                 </div>

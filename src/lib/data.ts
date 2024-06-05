@@ -85,20 +85,20 @@ export async function fetchFilteredTransactions(email: string, query: string) {
     noStore();
 
     try {
-        const filteredTransactions = await sql<LedgerTable>`
-        SELECT t.*, COALESCE(bt."typeName", null) AS typeName
-        FROM "Transaction" t
-        LEFT JOIN "BudgetType" bt ON t."budgetTypeId" = bt."id"
-        WHERE (
-        ("createdAt"::TEXT ILIKE ${`%${query}%`} OR
-        "transactionName" ILIKE ${`%${query}%`} OR
-        "transactionType"::TEXT ILIKE ${`%${query}%`} OR
-        "transactionAmount"::TEXT ILIKE ${`%${query}%`} OR
-        "typeName" ILIKE ${`%${query}%`})
-        AND "userId" = (SELECT "id" FROM "User" WHERE "email" = ${email})
-        );
-    `;
-        return filteredTransactions.rows;
+        
+        const filteredTransactions = await prisma.transaction.findMany({
+            where: {
+                transactionName: {
+                    contains: query,
+                    mode: 'insensitive'
+                },
+                user: {
+                    email
+                }
+            }
+        })
+        
+        return filteredTransactions;
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch transactions data.');
